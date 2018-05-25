@@ -20,7 +20,7 @@ class User extends Component<Props> {
   }
 
   render() {
-    const userIds = this.props.userId ? this.props.userId : [];
+    const userFavoriteNumbers = this.props.userFavoriteNumbers ? this.props.userFavoriteNumbers : [];
     return (
         <div className="User">
         <div>User</div>

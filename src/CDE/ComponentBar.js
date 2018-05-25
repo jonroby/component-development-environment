@@ -5,7 +5,7 @@ import React, { Component } from "react";
 import "./ComponentBar.css";
 
 const ComponentBar = props => {
-  const { components, selected, onSelect } = props;
+  const { components, selectedComponent, onSelect } = props;
   const displayComponents = (components, selected, onSelect) => {
     return components.map(comp => {
       console.log('comp ', comp)
@@ -28,7 +28,7 @@ const ComponentBar = props => {
       </div>
 
       <ul className="component-bar-links-list">
-        {displayComponents(components, selected, onSelect)}
+        {displayComponents(components, selectedComponent, onSelect)}
       </ul>
     </div>
   );
