@@ -2,10 +2,11 @@
 
 import React, { Component } from "react";
 
-import * as components from "../components/index.js";
+import * as components from "../components/index";
 import componentProps from "../components/component-props/component-props";
 
 import CDE from "./CDE";
+
 import ComponentBar from "./ComponentBar";
 
 import "./CDEScreen.css";
@@ -33,17 +34,30 @@ class CDEScreen extends Component<Props> {
   render() {
     let cp =
       (componentProps[this.state.selectedComponent] &&
-        componentProps[this.state.selectedComponent].props) ||
+        componentProps[this.state.selectedComponent]) ||
       {};
+
+    console.log("cp ", componentProps);
+
+    // if (cp) {
+    //   const filecontents = componentProps[this.state.selectedComponent].props;
+    //   cp = { cp, ...filecontents };
+    // }
 
     return (
       <div className="cde-screen">
+        <div className="cde-screen-padding-left" />
         <ComponentBar
           components={Object.keys(components)}
           selectedComponent={this.state.selectedComponent}
           onSelect={this.onSelect}
         />
-        <CDE componentProps={cp} />
+        <CDE
+          components={components}
+          componentProps={cp}
+          selectedComponent={this.state.selectedComponent}
+        />
+        <div className="cde-screen-padding-bottom" />
       </div>
     );
   }

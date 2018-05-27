@@ -1,5 +1,14 @@
+.cde-screen-padding-left {
+    padding-left: 240px;
+}
+
 .cde-screen {
     display: flex;
     flex-direction: row;
     height: 100%;
+
+}
+
+.cde-screen-padding-bottom {
+    padding-bottom: 40px;
 }
