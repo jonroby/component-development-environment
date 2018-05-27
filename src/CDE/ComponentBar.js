@@ -24,7 +24,9 @@ const ComponentBar = props => {
   return (
     <div className="component-bar-container">
       <div className="component-bar-header">
-        <div>Component Development Environment</div>
+        <div>Component</div>
+      <div>Development</div>
+      <div>Environment</div>
       </div>
 
       <ul className="component-bar-links-list">
