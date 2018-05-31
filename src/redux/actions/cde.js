@@ -1,10 +1,8 @@
 export const types = {
-  FETCH_SOMETHING: 'FETCH_SOMETHING',
-  FETCH_ANOTHER_THING: 'FETCH_ANOTHER_THING'
+  SELECT_COMPONENT: 'SELECT_COMPONENT',
 };
 
-export const fetchSingleArticle = payload => ({ type: types.FETCH_SINGLE_ARTICLE, payload });
-export const fetchAnotherThing = payload => ({
-  type: types.FETCH_ANOTHER_THING,
+export const selectComponent = payload => ({
+  type: types.SELECT_COMPONENT,
   payload
 });

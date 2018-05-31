@@ -8,16 +8,9 @@ export const initialState = {
 
 const cdeReducer = (state = initialState, action) => {
   switch (action.type) {
-    case types.FETCH_USER:
-      return state;
-    case types.FETCH_USER_SUCCESS:
-      return Object.assign({}, state, action.payload);
-    case types.FETCH_USER_FAILED:
-      return state;
-    case types.FETCH_ANOTHER_THING:
-      return state;
-
-  
+    case types.SELECT_COMPONENT:
+      const selectedComponent = { selectedComponent: action.payload };
+      return { ...state, ...selectedComponent };
 
     default:
       return state;
