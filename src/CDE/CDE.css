@@ -1,0 +1,29 @@
+.cde {
+    display: flex;
+    flex-grow: 1;
+    justify-content: center;
+    width: 100%;
+    padding-bottom: 20px;
+}
+
+.cde > div {
+    width: 82%;
+}
+
+
+.cde-component-name {
+    font-size: 21px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    height: 113px;
+    display: flex;
+    align-items: center;
+    border-bottom: 1px solid #e8e8e8;
+}
+
+.code {
+    font-family: 'Menlo';
+    font-size: 16px;
+    background-color: #f5f5f5;
+    padding: 20px;
+}

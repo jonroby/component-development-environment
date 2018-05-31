@@ -3,155 +3,64 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import "./CDE.css";
-
+import Tabs from "./Tabs";
+import ComponentView from "./ComponentView";
 import TypesTable from "./TypesTable";
 import SelectFakeProps from "./SelectFakeProps.js";
+import { fetchFakeProps } from "../redux/actions/cde";
+import "./CDE.css";
 
 class CDE extends Component<Props> {
   constructor(props) {
     super(props);
-    this.state = {
-      selectedTab: "component",
-      fakeProps: {},
-      snapshots: ["default"],
-      selectedSnapshot: "default"
-    };
+    this.state = {};
   }
 
   componentDidMount() {
-    fetch(`http://localhost:3000/fake_props/${this.props.selectedComponent}`)
-      .then(response => {
-        console.log("response ", response);
-        return response.json();
-      })
-      .then(fakeProps => {
-        if (!fakeProps) return;
-        this.setState({ fakeProps });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    this.props.fetchFakeProps(this.props.selectedComponent);
   }
 
-  componentDidUpdate(prevProps, prevState) {
+  componentDidUpdate(prevProps) {
     if (prevProps.selectedComponent === this.props.selectedComponent) return;
-
-    fetch(`http://localhost:3000/fake_props/${this.props.selectedComponent}`)
-      .then(response => {
-        return response.json();
-      })
-      .then(fakeProps => {
-        if (!fakeProps) return;
-        this.setState({ fakeProps });
-      })
-      .catch(err => {
-        console.log(err);
-      });
+    this.props.fetchFakeProps(this.props.selectedComponent);
   }
 
-  renderSelectedTab = element => {
-    const types = (
-      <TypesTable selectedComponent={this.props.selectedComponent} />
-    );
-
-    const component = (
-      <div className="cde-component-container">
-        <div className="cde-component-outer">
-          <div className="cde-component">{element}</div>
-        </div>
-      </div>
-    );
-
-    const custom = (
-      <SelectFakeProps
+  renderSelectedTab = () => {
+    const Component = (
+      <ComponentView
         selectedComponent={this.props.selectedComponent}
-        updateSnapshots={this.updateSnapshots}
-        selectedSnapshot={this.selectedSnapshot}
+        fakeProps={this.props.fakeProps}
       />
+    );
+
+    const Custom = (
+      <SelectFakeProps selectedComponent={this.props.selectedComponent} />
+    );
+
+    const Types = (
+      <TypesTable selectedComponent={this.props.selectedComponent} />
     );
 
     // const code = (
     //   <pre className="code">{this.props.componentProps.filecontents}</pre>
     // );
 
-    const code = null;
+    const Code = null;
 
-    const opts = { types, component, code, custom };
-    return opts[this.state.selectedTab];
-  };
-
-  updateSnapshots = snapshots => {
-    this.setState({ snapshots });
+    const opts = { Component, Custom, Types, Code };
+    return opts[this.props.selectedTab];
   };
 
   render() {
-    const el = this.props.selectedComponent
-      ? this.props.components[this.props.selectedComponent]
-      : false;
-
-    // console.log('this.props.componentProps ', this.props.componentProps)
-    // const selectedComponentProps = this.props.componentProps
-    console.log("this.state.fakeProps ", this.state.fakeProps);
-
-    const element = el
-      ? React.createElement(el, this.state.fakeProps, null)
-      : null;
-
     return (
       <div className="cde">
         <div>
           <div className="cde-component-name">
             <div>{this.props.selectedComponent}</div>
-            <div>{this.state.snapshots.map(i => <div>{i}</div>)}</div>
+            <div>{this.props.snapshots.map(i => <div>{i}</div>)}</div>
           </div>
-
-          <div className="cde-tab-bar">
-            <div
-              className={
-                this.state.selectedTab === "component"
-                  ? "cde-selected-tab"
-                  : "cde-tab"
-              }
-              onClick={e => this.setState({ selectedTab: "component" })}
-            >
-              Component
-            </div>
-            <div
-              className={
-                this.state.selectedTab === "custom"
-                  ? "cde-selected-tab"
-                  : "cde-tab"
-              }
-              onClick={e => this.setState({ selectedTab: "custom" })}
-            >
-              Custom
-            </div>
-
-            <div
-              className={
-                this.state.selectedTab === "types"
-                  ? "cde-selected-tab"
-                  : "cde-tab"
-              }
-              onClick={e => this.setState({ selectedTab: "types" })}
-            >
-              Types
-            </div>
-
-            <div
-              className={
-                this.state.selectedTab === "code"
-                  ? "cde-selected-tab"
-                  : "cde-tab"
-              }
-              onClick={e => this.setState({ selectedTab: "code" })}
-            >
-              Code
-            </div>
-          </div>
-
-          {this.renderSelectedTab(element)}
+          <Tabs />
+          {this.renderSelectedTab()}
         </div>
       </div>
     );
@@ -160,7 +69,10 @@ class CDE extends Component<Props> {
 
 const mapStateToProps = state => ({
   components: state.cde.components,
-  selectedComponent: state.cde.selectedComponent
+  selectedComponent: state.cde.selectedComponent,
+  snapshots: state.cde.snapshots,
+  fakeProps: state.cde.fakeProps,
+  selectedTab: state.cde.selectedTab
 });
 
-export default connect(mapStateToProps)(CDE);
+export default connect(mapStateToProps, { fetchFakeProps })(CDE);

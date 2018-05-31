@@ -1,0 +1,10 @@
+.options {
+    border: 1px solid gray;
+    cursor: pointer;
+}
+
+.option {
+    display: flex;
+    border: 1px solid gray;
+    cursor: pointer;
+}

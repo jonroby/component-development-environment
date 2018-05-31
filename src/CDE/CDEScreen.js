@@ -13,14 +13,10 @@ class CDEScreen extends Component {
       <div className="cde-screen">
         <div className="cde-screen-padding-left" />
         <ComponentBar />
+        <CDE />
       </div>
     );
   }
 }
-
-//   <CDE
-// components={components}
-// selectedComponent={this.state.selectedComponent}
-//   />
 
 export default CDEScreen;

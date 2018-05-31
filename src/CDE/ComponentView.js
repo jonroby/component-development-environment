@@ -16,8 +16,6 @@ function ComponentView(props) {
         )
       : null;
 
-  console.log("here");
-
   return (
     <div className="cde-component-container">
       <div className="cde-component-outer">
