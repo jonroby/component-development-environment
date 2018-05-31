@@ -1,9 +1,11 @@
 import { all, call } from 'redux-saga/effects';
-import cdeSaga from './cde';
+import fetchFakePropsSaga from './fetchFakePropsSaga';
+import fetchPropsAstsSaga from './fetchPropsAstsSaga';
 
 export default function* rootSaga() {
   yield all([
-    call(cdeSaga),
+    call(fetchFakePropsSaga),
+    call(fetchPropsAstsSaga)
   ]);
 }
 

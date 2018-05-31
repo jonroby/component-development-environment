@@ -1,25 +1,23 @@
-const query = query => () => {
-  return fetch('http://localhost:9002/graphql', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ query }),
-  })
-  .then(function(response) {
-    return response.json();
-  })
-}
+// const query = query => () => {
+//   return fetch("http://localhost:9002/graphql", {
+//     method: "POST",
+//     headers: { "Content-Type": "application/json" },
+//     body: JSON.stringify({ query })
+//   }).then(function(response) {
+//     return response.json();
+//   });
+// };
 
-const mutation = () => {};
+// const mutation = () => {};
 
+const get = path => {
+  return fetch(`http://localhost:3000${path}`)
+    .then(response => response.json())
+    .catch(err => {
+      console.log(err);
+    });
+};
 
-// implement regular get method
-const get = url => () => {
+const post = url => () => {};
 
-}
-
-// implement regular post method
-const post = url => () => {
-
-}
-
-export default { query, mutation };
+export { get, post };
