@@ -1,0 +1,22 @@
+.cde-tab-bar {
+    display: flex;
+    flex-direction: row;
+}
+
+.cde-tab-bar div {
+    padding-top: 20px;
+    padding-bottom: 20px;
+}
+
+.cde-tab-bar div {
+    padding-right: 60px;
+}
+
+.cde-selected-tab {
+    color: #1978c8;
+}
+
+.cde-tab:hover {
+    color: #f28a25;
+    cursor: pointer;
+}
