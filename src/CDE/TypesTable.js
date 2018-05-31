@@ -1,31 +1,48 @@
 // @flow
 
 import React, { Component } from "react";
+import { connect } from "react-redux";
+
+import { fetchPropsAsts } from "../redux/actions/cde";
 
 import "./TypesTable.css";
 
 class TypesTable extends Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {};
+  componentDidMount() {
+    this.props.fetchPropsAsts(this.props.selectedComponent);
   }
 
-  renderTypesTable = componentProps => {
-    return Object.keys(componentProps).map(i => {
+  componentDidUpdate(prevProps, prevState) {
+    if (prevProps.selectedComponent === this.props.selectedComponent) return;
+    this.props.fetchPropsAsts(this.props.selectedComponent);
+  }
+
+  renderTypesTable = propsAst => {
+    if (!propsAst) return null;
+    console.log("propsAst ", propsAst);
+
+    return Object.keys(propsAst).map(i => {
       return (
         <tr>
           <td className="types-table-code">{i}</td>
           <td className="types-table-code">
-            {componentProps[i].flowType.raw || componentProps[i].flowType.name}
+            <pre>{propsAst[i].flowType.raw || propsAst[i].flowType.name}</pre>
           </td>
-          <td>{componentProps[i].required.toString()}</td>
-          <td>{componentProps[i].description}</td>
+          <td>{propsAst[i].required.toString()}</td>
         </tr>
       );
     });
   };
 
   render() {
+    if (
+      !(
+        this.props.propsAsts &&
+        this.props.propsAsts[this.props.selectedComponent] &&
+        this.props.propsAsts[this.props.selectedComponent].props
+      )
+    )
+      return null;
     return (
       <div className="types-table">
         <table>
@@ -33,13 +50,18 @@ class TypesTable extends Component<Props> {
             <th align="left">PropName</th>
             <th align="left">Type</th>
             <th align="left">Required</th>
-            <th align="left">Description</th>
           </tr>
-          {this.renderTypesTable(this.props.componentProps)}
+          {this.renderTypesTable(
+            this.props.propsAsts[this.props.selectedComponent].props
+          )}
         </table>
       </div>
     );
   }
 }
 
-export default TypesTable;
+const mapStateToProps = state => ({
+  propsAsts: state.cde.propsAsts
+});
+
+export default connect(mapStateToProps, { fetchPropsAsts })(TypesTable);

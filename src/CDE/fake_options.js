@@ -26,24 +26,24 @@ module.exports = {
     "productMaterial",
     "product"
   ],
-  company: [
-    "suffixes",
-    "companyName",
-    "companySuffix",
-    "catchPhrase",
-    "bs",
-    "catchPhraseAdjective",
-    "catchPhraseDescriptor",
-    "catchPhraseNoun",
-    "bsAdjective",
-    "bsBuzz",
-    "bsNoun"
-  ],
-  database: [],
-  column: [],
-  type: [],
-  collation: [],
-  engine: [],
+  // company: [
+  //   "suffixes",
+  //   "companyName",
+  //   "companySuffix",
+  //   "catchPhrase",
+  //   "bs",
+  //   "catchPhraseAdjective",
+  //   "catchPhraseDescriptor",
+  //   "catchPhraseNoun",
+  //   "bsAdjective",
+  //   "bsBuzz",
+  //   "bsNoun"
+  // ],
+  // database: [],
+  // column: [],
+  // type: [],
+  // collation: [],
+  // engine: [],
   date: ["past", "future", "between", "recent", "soon", "month", "weekday"],
   finance: [
     "account",
@@ -59,19 +59,19 @@ module.exports = {
     "iban",
     "bic"
   ],
-  hacker: ["abbreviation", "adjective", "noun", "verb", "ingverb", "phrase"],
-  helpers: [
-    "randomize",
-    "slugify",
-    "replaceSymbolWithNumber",
-    "replaceSymbols",
-    "shuffle",
-    "mustache",
-    "createCard",
-    "contextualCard",
-    "userCard",
-    "createTransaction"
-  ],
+  // hacker: ["abbreviation", "adjective", "noun", "verb", "ingverb", "phrase"],
+  // helpers: [
+  //   "randomize",
+  //   "slugify",
+  //   "replaceSymbolWithNumber",
+  //   "replaceSymbols",
+  //   "shuffle",
+  //   "mustache",
+  //   "createCard",
+  //   "contextualCard",
+  //   "userCard",
+  //   "createTransaction"
+  // ],
   image: [
     "image",
     "avatar",
@@ -144,17 +144,17 @@ module.exports = {
     "locale",
     "alphaNumeric",
     "hexaDecimal"
-  ],
-  system: [
-    "fileName",
-    "commonFileName",
-    "mimeType",
-    "commonFileType",
-    "commonFileExt",
-    "fileType",
-    "fileExt",
-    "directoryPath",
-    "filePath",
-    "semver"
   ]
+  // system: [
+  //   "fileName",
+  //   "commonFileName",
+  //   "mimeType",
+  //   "commonFileType",
+  //   "commonFileExt",
+  //   "fileType",
+  //   "fileExt",
+  //   "directoryPath",
+  //   "filePath",
+  //   "semver"
+  // ]
 };
