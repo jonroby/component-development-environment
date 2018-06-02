@@ -1,33 +1,26 @@
 // @flow
 
-import React, { Component } from 'react';
+import React, { Component } from "react";
 
-import './User.css';
-
-// type test = {
-//   isSubscriber: boolean,
-// }
+import "./Movie.css";
 
 type Props = {
-  userTitle: string,
-  userId: number,
-  userFavoriteNumbers: Array<number>
+  id: string,
+  firstName: string,
+  lastName: string,
+  zipCode: number
 };
 
 class User extends Component<Props> {
-  constructor(props) {
-    super(props);
-  }
-
   render() {
-    const userFavoriteNumbers = this.props.userFavoriteNumbers ? this.props.userFavoriteNumbers : [];
     return (
-        <div className="User">
+      <div className="Movie">
         <div>User</div>
-        <div>user name: {this.props.userName}</div>
-        <div>user id: {this.props.userId}</div>
-        <div>user favorite numbers: {userFavoriteNumbers.map(i => <div>{i}</div>)}</div>
-        </div>
+        <div>ID: {this.props.id}</div>
+        <div>First Name: {this.props.firstName}</div>
+        <div>Last Name: {this.props.lastName}</div>
+        <div>Zipcode: {this.props.zipCode}</div>
+      </div>
     );
   }
 }
