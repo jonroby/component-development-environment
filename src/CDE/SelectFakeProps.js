@@ -1,89 +1,107 @@
 // @flow
 
 import React, { Component } from "react";
-import CustomOptions from './customOptions';
+import { connect } from "react-redux";
+import CustomOptions from "./CustomOptions";
+
+import {
+  // fetchCustomTypes,
+  // postCustomTypes,
+  // delCustomTypes
+  handleSnapshots
+} from "../redux/actions/cde.js";
 
 import "./SelectFakeProps.css";
 
 class SelectFakeProps extends Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    fetch(`http://localhost:3000/custom_types/${this.props.selectedComponent}`)
-      .then(response => {
-        return response.json();
-      })
-      .then(customTypes => {
-        if (!customTypes) return;
-        this.setState({ customTypes: customTypes });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.selectedComponent === this.props.selectedComponent) return;
-    fetch(`http://localhost:3000/custom_types/${this.props.selectedComponent}`)
-      .then(response => {
-        return response.json();
-      })
-      .then(customTypes => {
-        if (!customTypes) return;
-        this.setState({ customTypes: customTypes.default });
-      })
-      .catch(err => {
-        console.log(err);
-      });
-  }
-
-  updateCustomTypes = path => customType => {
-    const replaced = { [path]: customType };
-    const newCustomTypes = Object.assign({}, this.state.customTypes, replaced);
-    this.setState({ customTypes: newCustomTypes });
-  }
-
-  postCustomTypes = () => {
-    // send fetch post
-    fetch(`http://localhost:3000/custom_types/${this.props.selectedComponent}`, {
-      body: JSON.stringify(this.state.customTypes), // must match 'Content-Type' header
-      cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
-      credentials: 'same-origin', // include, same-origin, *omit
-      headers: {
-        'user-agent': 'Mozilla/4.0 MDN Example',
-        'content-type': 'application/json'
-      },
-      method: 'POST', // *GET, POST, PUT, DELETE, etc.
-      mode: 'cors', // no-cors, cors, *same-origin
-      redirect: 'follow', // manual, *follow, error
-      referrer: 'no-referrer', // *client, no-referrer
-    })
-      // .then(response => response.json())
-  }
-
   renderPropsPaths = () => {
-    if (!this.state.customTypes) return null;
-    return Object.keys(this.state.customTypes).map(path => {
+    // TODO: Rewrite (clarity)
+    const selectedSnapshot = this.props.snapshot;
+    if (!selectedSnapshot) return null;
+
+    return Object.keys(selectedSnapshot).map(path => {
       return (
         <div className="custom-types">
           <div>{path}</div>
 
-          <CustomOptions currentOption={this.state.customTypes[path]} update={this.updateCustomTypes(path)}/>
-
-
-
+          <CustomOptions
+            currentOption={selectedSnapshot[path]}
+            update={this.props.updateSnapshot}
+            path={path}
+          />
         </div>
       );
     });
   };
 
   render() {
-    console.log('this.state  ', this.state)
-    return <div>{this.renderPropsPaths()} <div onClick={this.postCustomTypes}>SEND</div></div>;
+    const { selectedComponent, selectedSnapshot, snapshotChanges } = this.props;
+
+    return (
+      <div>
+        <div>{this.renderPropsPaths()}</div>
+
+        <div className="buttons-container">
+          {selectedSnapshot === "default" ? null : (
+            <div
+              className="button"
+              onClick={() =>
+                this.props.handleSnapshots({
+                  restMethod: "put",
+                  component: selectedComponent,
+                  snapshot: selectedSnapshot,
+                  snapshotChanges
+                })
+              }
+            >
+              EDIT
+            </div>
+          )}
+
+          <div
+            className="button"
+            onClick={() =>
+              this.props.handleSnapshots({
+                restMethod: "post",
+                component: selectedComponent,
+                snapshot: selectedSnapshot,
+                snapshotChanges
+              })
+            }
+          >
+            NEW SNAPSHOT
+          </div>
+          {this.props.selectedSnapshot === "default" ? null : (
+            <div
+              className="button"
+              onClick={() =>
+                this.props.handleSnapshots({
+                  restMethod: "del",
+                  component: selectedComponent,
+                  snapshot: selectedSnapshot
+                })
+              }
+            >
+              DELETE
+            </div>
+          )}
+        </div>
+      </div>
+    );
   }
 }
 
-export default SelectFakeProps;
+const mapStateToProps = state => ({
+  customTypes: state.cde.customTypes,
+  selectedComponent: state.cde.selectedComponent,
+  selectedSnapshot: state.cde.selectedSnapshot,
+  snapshotChanges: state.cde.snapshotChanges,
+  snapshot: state.cde.snapshot
+});
+
+export default connect(mapStateToProps, {
+  // fetchCustomTypes,
+  // postCustomTypes,
+  // delCustomTypes
+  handleSnapshots
+})(SelectFakeProps);

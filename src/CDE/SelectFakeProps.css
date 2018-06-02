@@ -5,3 +5,18 @@
 .custom-types div {
 
 }
+
+
+.buttons-container {
+    display: flex;
+    padding-top: 20px;
+}
+
+
+
+.button {
+    border: 1px solid gray;
+    cursor: hover;
+    margin-right: 20px;
+}
+
