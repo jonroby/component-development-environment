@@ -4,7 +4,7 @@ const {
   transformFileString,
   addImportAndExport
 } = require("./addImportAndExport");
-const createPaths = require("./TESTcreatePaths");
+const createPaths = require("./createPaths");
 
 // will need to pass config routes
 // use ./src/components as default
