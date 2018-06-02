@@ -1,7 +1,9 @@
 // @flow
 
 import React, { Component } from "react";
+import { connect } from 'react-redux';
 import options from "./fake_options";
+import { updateSnapshot } from '../redux/actions/cde.js';
 
 import "./CustomOptions.css";
 
@@ -9,7 +11,7 @@ class CustomOptions extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      currentOption: "default",
+      currentOption: "",
       selectedOption: "",
       selectedSuboption: "",
       showOptions: false
@@ -24,7 +26,7 @@ class CustomOptions extends Component<Props> {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.props === prevProps) return;
+    if (this.state.currentOption !== "" && (this.props.currentOption === prevProps.currentOption)) return;
     this.setState({
       currentOption:
         (this.props.currentOption && this.props.currentOption.item) || "default"
@@ -40,7 +42,9 @@ class CustomOptions extends Component<Props> {
             <div className="suboption">
               <div
                 onClick={() => {
-                  this.props.update({ section: option, item: suboption });
+                  this.props.updateSnapshot({
+                    [this.props.path]: { section: option, item: suboption }
+                  });
                   this.setState({
                     currentOption: suboption,
                     showOptions: false,
@@ -96,4 +100,4 @@ class CustomOptions extends Component<Props> {
   }
 }
 
-export default CustomOptions;
+export default connect(null, { updateSnapshot })(CustomOptions);
