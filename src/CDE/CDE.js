@@ -7,24 +7,10 @@ import Tabs from "./Tabs";
 import ComponentView from "./ComponentView";
 import TypesTable from "./TypesTable";
 import SelectFakeProps from "./SelectFakeProps.js";
-import { fetchFakeProps } from "../redux/actions/cde";
+import { selectSnapshot } from "../redux/actions/cde";
 import "./CDE.css";
 
-class CDE extends Component<Props> {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
-
-  componentDidMount() {
-    this.props.fetchFakeProps(this.props.selectedComponent);
-  }
-
-  componentDidUpdate(prevProps) {
-    if (prevProps.selectedComponent === this.props.selectedComponent) return;
-    this.props.fetchFakeProps(this.props.selectedComponent);
-  }
-
+class CDE extends Component {
   renderSelectedTab = () => {
     const Component = (
       <ComponentView
@@ -41,14 +27,31 @@ class CDE extends Component<Props> {
       <TypesTable selectedComponent={this.props.selectedComponent} />
     );
 
-    // const code = (
-    //   <pre className="code">{this.props.componentProps.filecontents}</pre>
-    // );
-
-    const Code = null;
+    const Code = this.props.propsAst ? (
+      <pre className="code">{this.props.propsAst.filecontents}</pre>
+    ) : null;
 
     const opts = { Component, Custom, Types, Code };
     return opts[this.props.selectedTab];
+  };
+
+  renderSnapshots = () => {
+    if (!this.props.snapshotNames) return;
+
+    const snapshots = this.props.snapshotNames.map(s => {
+      return (
+        <div
+          className={
+            s === this.props.selectedSnapshot ? "snapshot-selected" : "snapshot"
+          }
+          onClick={() => this.props.selectSnapshot(s)}
+        >
+          {s}
+        </div>
+      );
+    });
+
+    return <div className="snapshots-container">{snapshots}</div>;
   };
 
   render() {
@@ -57,7 +60,7 @@ class CDE extends Component<Props> {
         <div>
           <div className="cde-component-name">
             <div>{this.props.selectedComponent}</div>
-            <div>{this.props.snapshots.map(i => <div>{i}</div>)}</div>
+            {this.renderSnapshots()}
           </div>
           <Tabs />
           {this.renderSelectedTab()}
@@ -68,11 +71,14 @@ class CDE extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  components: state.cde.components,
   selectedComponent: state.cde.selectedComponent,
-  snapshots: state.cde.snapshots,
+  selectedTab: state.cde.selectedTab,
+  snapshotNames: state.cde.snapshotNames,
   fakeProps: state.cde.fakeProps,
-  selectedTab: state.cde.selectedTab
+  selectedSnapshot: state.cde.selectedSnapshot,
+  propsAst: state.cde.propsAst
 });
 
-export default connect(mapStateToProps, { fetchFakeProps })(CDE);
+export default connect(mapStateToProps, {
+  selectSnapshot
+})(CDE);
