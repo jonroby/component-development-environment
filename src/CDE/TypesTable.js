@@ -3,23 +3,11 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
-import { fetchPropsAsts } from "../redux/actions/cde";
-
 import "./TypesTable.css";
 
 class TypesTable extends Component<Props> {
-  componentDidMount() {
-    this.props.fetchPropsAsts(this.props.selectedComponent);
-  }
-
-  componentDidUpdate(prevProps, prevState) {
-    if (prevProps.selectedComponent === this.props.selectedComponent) return;
-    this.props.fetchPropsAsts(this.props.selectedComponent);
-  }
-
   renderTypesTable = propsAst => {
     if (!propsAst) return null;
-    console.log("propsAst ", propsAst);
 
     return Object.keys(propsAst).map(i => {
       return (
@@ -35,14 +23,7 @@ class TypesTable extends Component<Props> {
   };
 
   render() {
-    if (
-      !(
-        this.props.propsAsts &&
-        this.props.propsAsts[this.props.selectedComponent] &&
-        this.props.propsAsts[this.props.selectedComponent].props
-      )
-    )
-      return null;
+    if (!this.props.propsAst) return null;
     return (
       <div className="types-table">
         <table>
@@ -51,9 +32,7 @@ class TypesTable extends Component<Props> {
             <th align="left">Type</th>
             <th align="left">Required</th>
           </tr>
-          {this.renderTypesTable(
-            this.props.propsAsts[this.props.selectedComponent].props
-          )}
+          {this.renderTypesTable(this.props.propsAst.props)}
         </table>
       </div>
     );
@@ -61,7 +40,7 @@ class TypesTable extends Component<Props> {
 }
 
 const mapStateToProps = state => ({
-  propsAsts: state.cde.propsAsts
+  propsAst: state.cde.propsAst
 });
 
-export default connect(mapStateToProps, { fetchPropsAsts })(TypesTable);
+export default connect(mapStateToProps)(TypesTable);
