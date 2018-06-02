@@ -1,16 +1,4 @@
-// const query = query => () => {
-//   return fetch("http://localhost:9002/graphql", {
-//     method: "POST",
-//     headers: { "Content-Type": "application/json" },
-//     body: JSON.stringify({ query })
-//   }).then(function(response) {
-//     return response.json();
-//   });
-// };
-
-// const mutation = () => {};
-
-const get = path => {
+const get = ({ path }) => {
   return fetch(`http://localhost:3000${path}`)
     .then(response => response.json())
     .catch(err => {
@@ -18,6 +6,52 @@ const get = path => {
     });
 };
 
-const post = url => () => {};
+const post = ({ path, body }) => {
+  return fetch(`http://localhost:3000${path}`, {
+    body: JSON.stringify(body), // must match 'Content-Type' header
+    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: "same-origin", // include, same-origin, *omit
+    headers: {
+      "content-type": "application/json"
+    },
+    method: "POST", // *GET, POST, PUT, DELETE, etc.
+    mode: "cors", // no-cors, cors, *same-origin
+    redirect: "follow", // manual, *follow, error
+    referrer: "no-referrer" // *client, no-referrer
+  })
+    .then(response => response.json())
+    .catch(err => {
+      console.log(err);
+    });
+};
 
-export { get, post };
+const put = ({ path, body }) => {
+  return fetch(`http://localhost:3000${path}`, {
+    body: JSON.stringify(body), // must match 'Content-Type' header
+    cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
+    credentials: "same-origin", // include, same-origin, *omit
+    headers: {
+      "content-type": "application/json"
+    },
+    method: "PUT", // *GET, POST, PUT, DELETE, etc.
+    mode: "cors", // no-cors, cors, *same-origin
+    redirect: "follow", // manual, *follow, error
+    referrer: "no-referrer" // *client, no-referrer
+  })
+    .then(response => response.json())
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+const del = ({ path }) => {
+  return fetch(`http://localhost:3000${path}`, {
+    method: "DELETE"
+  })
+    .then(response => response.json())
+    .catch(err => {
+      console.log(err);
+    });
+};
+
+export default { get, post, put, del };

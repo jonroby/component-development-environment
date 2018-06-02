@@ -1,10 +1,10 @@
-let getOptions = payload => {
-  return `/fake_props/${payload}`;
+let getOptions = () => {
+  return `/custom_types`;
 };
 
 let transform = (data, payload) => {
   return {
-    data: { [payload]: data },
+    data: { customTypes: data },
     errors: null,
   };
 };

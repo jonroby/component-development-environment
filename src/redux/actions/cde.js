@@ -1,12 +1,30 @@
 export const types = {
   SELECT_COMPONENT: 'SELECT_COMPONENT',
   SELECT_TAB: 'SELECT_TAB',
-  FETCH_FAKE_PROPS: 'FETCH_FAKE_PROPS',
-  FETCH_FAKE_PROPS_SUCCESS: 'FETCH_FAKE_PROPS_SUCCESS',
-  FETCH_FAKE_PROPS_FAILURE: 'FETCH_FAKE_PROPS_FAILURE',
-  FETCH_PROPS_ASTS: 'FETCH_PROPS_ASTS',
-  FETCH_PROPS_ASTS_SUCCESS: 'FETCH_PROPS_ASTS_SUCCESS',
-  FETCH_PROPS_ASTS_FAILURE: 'FETCH_PROPS_ASTS_FAILURE',
+  SELECT_SNAPSHOT: 'SELECT_SNAPSHOT',
+  UPDATE_SNAPSHOT: 'UPDATE_SNAPSHOT',
+  FETCH_COMPONENT_DATA: 'FETCH_COMPONENT_DATA',
+  FETCH_COMPONENT_DATA_SUCCESS: 'FETCH_COMPONENT_DATA_SUCCESS',
+  FETCH_COMPONENT_DATA_FAILURE: 'FETCH_COMPONENT_DATA_FAILURE',
+  HANDLE_SNAPSHOTS: 'HANDLE_SNAPSHOTS',
+  HANDLE_SNAPSHOTS_SUCCESS: 'HANDLE_SNAPSHOTS_SUCCESS',
+  HANDLE_SNAPSHOTS_FAILURE: 'HANDLE_SNAPSHOTS_FAILURE',
+
+  // FETCH_FAKE_PROPS: 'FETCH_FAKE_PROPS',
+  // FETCH_FAKE_PROPS_SUCCESS: 'FETCH_FAKE_PROPS_SUCCESS',
+  // FETCH_FAKE_PROPS_FAILURE: 'FETCH_FAKE_PROPS_FAILURE',
+  // FETCH_PROPS_ASTS: 'FETCH_PROPS_ASTS',
+  // FETCH_PROPS_ASTS_SUCCESS: 'FETCH_PROPS_ASTS_SUCCESS',
+  // FETCH_PROPS_ASTS_FAILURE: 'FETCH_PROPS_ASTS_FAILURE',
+  // FETCH_CUSTOM_TYPES: 'FETCH_CUSTOM_TYPES',
+  // FETCH_CUSTOM_TYPES_SUCCESS: 'FETCH_CUSTOM_TYPES_SUCCESS',
+  // FETCH_CUSTOM_TYPES_FAILURE: 'FETCH_CUSTOM_TYPES_FAILURE',
+  // POST_CUSTOM_TYPES: 'POST_CUSTOM_TYPES',
+  // POST_CUSTOM_TYPES_SUCCESS: 'POST_CUSTOM_TYPES_SUCCESS',
+  // POST_CUSTOM_TYPES_FAILURE: 'POST_CUSTOM_TYPES_FAILURE',
+  // DEL_CUSTOM_TYPES: 'DEL_CUSTOM_TYPES',
+  // DEL_CUSTOM_TYPES_SUCCESS: 'DEL_CUSTOM_TYPES_SUCCESS',
+  // DEL_CUSTOM_TYPES_FAILURE: 'DEL_CUSTOM_TYPES_FAILURE',
 };
 
 export const selectComponent = payload => ({
@@ -19,35 +37,124 @@ export const selectTab = payload => ({
   payload
 });
 
-
-export const fetchFakeProps = payload => ({
-  type: types.FETCH_FAKE_PROPS,
+export const selectSnapshot = payload => ({
+  type: types.SELECT_SNAPSHOT,
   payload
 });
 
-export const fetchFakePropsSuccess = payload => ({
-  type: types.FETCH_FAKE_PROPS_SUCCESS,
+export const updateSnapshot = payload => ({
+  type: types.UPDATE_SNAPSHOT,
   payload
 });
 
-export const fetchFakePropsFailure = payload => ({
-  type: types.FETCH_FAKE_PROPS_FAILURE,
+export const fetchComponentData = payload => ({
+  type: types.FETCH_COMPONENT_DATA,
   payload
 });
 
-export const fetchPropsAsts = payload => ({
-  type: types.FETCH_PROPS_ASTS,
+export const fetchComponentDataSuccess = payload => ({
+  type: types.FETCH_COMPONENT_DATA_SUCCESS,
   payload
 });
 
-export const fetchPropsAstsSuccess = payload => ({
-  type: types.FETCH_PROPS_ASTS_SUCCESS,
+export const fetchComponentDataFailure = payload => ({
+  type: types.FETCH_COMPONENT_DATA_FAILURE,
   payload
 });
 
-export const fetchPropsAstsFailure = payload => ({
-  type: types.FETCH_PROPS_ASTS_FAILURE,
+export const handleSnapshots = payload => ({
+  type: types.HANDLE_SNAPSHOTS,
   payload
 });
 
+export const handleSnapshotsSuccess = payload => ({
+  type: types.HANDLE_SNAPSHOTS_SUCCESS,
+  payload
+});
+
+export const handleSnapshotsFailure = payload => ({
+  type: types.HANDLE_SNAPSHOTS_FAILURE,
+  payload
+});
+
+
+
+
+
+
+
+// export const fetchFakeProps = payload => ({
+//   type: types.FETCH_FAKE_PROPS,
+//   payload
+// });
+
+// export const fetchFakePropsSuccess = payload => ({
+//   type: types.FETCH_FAKE_PROPS_SUCCESS,
+//   payload
+// });
+
+// export const fetchFakePropsFailure = payload => ({
+//   type: types.FETCH_FAKE_PROPS_FAILURE,
+//   payload
+// });
+
+// export const fetchPropsAsts = payload => ({
+//   type: types.FETCH_PROPS_ASTS,
+//   payload
+// });
+
+// export const fetchPropsAstsSuccess = payload => ({
+//   type: types.FETCH_PROPS_ASTS_SUCCESS,
+//   payload
+// });
+
+// export const fetchPropsAstsFailure = payload => ({
+//   type: types.FETCH_PROPS_ASTS_FAILURE,
+//   payload
+// });
+
+// export const fetchCustomTypes = payload => ({
+//   type: types.FETCH_CUSTOM_TYPES,
+//   payload
+// });
+
+// export const fetchCustomTypesSuccess = payload => ({
+//   type: types.FETCH_CUSTOM_TYPES_SUCCESS,
+//   payload
+// });
+
+// export const fetchCustomTypesFailure = payload => ({
+//   type: types.FETCH_CUSTOM_TYPES_FAILURE,
+//   payload
+// });
+
+// export const postCustomTypes = payload => ({
+//   type: types.POST_CUSTOM_TYPES,
+//   payload
+// });
+
+// export const postCustomTypesSuccess = payload => ({
+//   type: types.POST_CUSTOM_TYPES_SUCCESS,
+//   payload
+// });
+
+// export const postCustomTypesFailure = payload => ({
+//   type: types.POST_CUSTOM_TYPES_FAILURE,
+//   payload
+// });
+
+// export const delCustomTypes = payload => ({
+//   type: types.DEL_CUSTOM_TYPES,
+//   payload
+// });
+
+// export const delCustomTypesSuccess = payload => ({
+//   type: types.DEL_CUSTOM_TYPES_SUCCESS,
+//   payload
+// });
+
+// export const delCustomTypesFailure = payload => ({
+//   type: types.DEL_CUSTOM_TYPES_FAILURE,
+//   payload
+// });
 
