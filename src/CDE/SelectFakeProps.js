@@ -5,41 +5,40 @@ import { connect } from "react-redux";
 import CustomOptions from "./CustomOptions";
 
 import {
-  // fetchCustomTypes,
-  // postCustomTypes,
-  // delCustomTypes
   handleSnapshots
 } from "../redux/actions/cde.js";
 
 import "./SelectFakeProps.css";
 
 class SelectFakeProps extends Component<Props> {
-  renderPropsPaths = () => {
-    // TODO: Rewrite (clarity)
-    const selectedSnapshot = this.props.snapshot;
-    if (!selectedSnapshot) return null;
+  renderPropsPaths = (snapshot) => {
+    if (!snapshot) return null;
 
-    return Object.keys(selectedSnapshot).map(path => {
-      return (
-        <div className="custom-types">
-          <div>{path}</div>
+    return Object.keys(snapshot).map(path => {
+      if (snapshot[path] === "default" || snapshot[path].item) {
+        return (
+          <div className="custom-types">
+            <div>{path}</div>
 
-          <CustomOptions
-            currentOption={selectedSnapshot[path]}
-            update={this.props.updateSnapshot}
-            path={path}
-          />
-        </div>
-      );
+            <CustomOptions
+              currentOption={snapshot[path]}
+              update={this.props.updateSnapshot}
+              path={path}
+              />
+          </div>
+        );
+      } else {
+        return this.renderPropsPaths(snapshot[path]);
+      }
     });
   };
 
   render() {
-    const { selectedComponent, selectedSnapshot, snapshotChanges } = this.props;
+    const { selectedComponent, selectedSnapshot, snapshotChanges, snapshot } = this.props;
 
     return (
       <div>
-        <div>{this.renderPropsPaths()}</div>
+        <div>{this.renderPropsPaths(snapshot)}</div>
 
         <div className="buttons-container">
           {selectedSnapshot === "default" ? null : (
@@ -100,8 +99,5 @@ const mapStateToProps = state => ({
 });
 
 export default connect(mapStateToProps, {
-  // fetchCustomTypes,
-  // postCustomTypes,
-  // delCustomTypes
   handleSnapshots
 })(SelectFakeProps);

@@ -2,7 +2,7 @@
 
 import React, { Component } from "react";
 
-import "./Movie.css";
+// import "./Movie.css";
 
 type Props = {
   id: string,

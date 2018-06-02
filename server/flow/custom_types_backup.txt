@@ -1,0 +1,21 @@
+custom types backup
+
+{
+  "User": {
+    "default": {
+      "username\/string": "default",
+      "firstname\/string": {
+        "section": "address",
+        "item": "zipCode"
+      }
+    }
+  },
+  "Post": {
+    "default": {
+      "postTitle\/string": {
+        "section": "address",
+        "item": "zipCode"
+      }
+    }
+  }
+}

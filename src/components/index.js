@@ -2,4 +2,5 @@ import Post from './Post';
 import User from './User';
 
 import Test from './Test';
-export { Post, User, Test };
+import Movie from './Movie';
+export { Post, User, Test, Movie };

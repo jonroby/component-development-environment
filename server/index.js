@@ -5,8 +5,6 @@ const koaBody = require("koa-body");
 const cors = require("@koa/cors");
 // const logger = require('koa-logger');
 const createFakeProps = require("./createFakeProps");
-const createPaths = require("./createPaths");
-
 const app = (module.exports = new Koa());
 
 // app.use(logger());
@@ -107,7 +105,7 @@ async function postSnapshot(ctx) {
 
 async function putSnapshot(ctx) {
   const body = ctx.request.body;
-  console.log("body ", body.snapshotChanges);
+
   const customTypes = JSON.parse(
     fs.readFileSync("./flow/custom_types.js", "utf8")
   );

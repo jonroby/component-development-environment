@@ -27,3 +27,27 @@
     background-color: #f5f5f5;
     padding: 20px;
 }
+
+.snapshots-container {
+    display: flex;
+}
+
+.snapshots-container div {
+    padding-left: 40px;
+}
+
+.snapshot-selected {
+    font-size: 16px;
+    color: #1978c8;
+}
+
+.snapshot {
+    font-size: 16px;
+}
+
+.snapshot:hover {
+    color: #f28a25;
+    cursor: pointer;
+}
+
+
