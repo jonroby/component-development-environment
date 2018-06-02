@@ -11,7 +11,7 @@ function ComponentView(props) {
     selectedComponent && props.fakeProps
       ? React.createElement(
           selectedComponent,
-          props.fakeProps[props.selectedComponent],
+          props.fakeProps,
           null
         )
       : null;
