@@ -2,7 +2,7 @@ This project, and proof of concept, is a development environment for creating Re
 
 ## Getting started ##
 
-Clone the repo and ```npm i``` (script here to start both servers)
+Clone the repo and ```npm i && npm run cde```
 - Create a new component in ```src/components```:
 ```
 // @flow
@@ -93,3 +93,11 @@ if (isInteractive) {
 +        // clearConsole();
        }
 ```
+
+## Goals
+
+The long term goal is one of two possibilities in order of preference: a) the central idea is adopted by Storybook and Styleguidist in some form, perhaps as an option or plugin or b) less preferably, it becomes it's own package.
+
+## Reservations
+
+I'm not sure that selecting more specific types for data by GUI is really the answer. Maybe a more fine grained type system?
