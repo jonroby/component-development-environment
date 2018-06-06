@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import { Layout } from "antd";
 import { fetchComponentData } from "../redux/actions/cde";
 import CDE from "./CDE";
-import ComponentMenu from "./ComponentBar";
+import ComponentMenu from "./ComponentMenu";
 
 import "./CDEScreen.css";
 
