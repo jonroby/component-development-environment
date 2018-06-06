@@ -2,39 +2,29 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Button } from "antd";
 import CustomOptions from "./CustomOptions";
 
-import {
-  handleSnapshots
-} from "../redux/actions/cde.js";
+import { handleSnapshots } from "../redux/actions/cde.js";
+
+import TypeSelector from "./TypeSelector";
 
 import "./SelectFakeProps.css";
 
 class SelectFakeProps extends Component<Props> {
-  renderPropsPaths = (snapshot) => {
+  renderPropsPaths = snapshot => {
     if (!snapshot) return null;
 
-    return Object.keys(snapshot).map(path => {
-      if (snapshot[path] === "default" || snapshot[path].item) {
-        return (
-          <div className="custom-types">
-            <div>{path}</div>
-
-            <CustomOptions
-              currentOption={snapshot[path]}
-              update={this.props.updateSnapshot}
-              path={path}
-              />
-          </div>
-        );
-      } else {
-        return this.renderPropsPaths(snapshot[path]);
-      }
-    });
+    return <TypeSelector snapshot={snapshot} propsAst={this.props.propsAst} />;
   };
 
   render() {
-    const { selectedComponent, selectedSnapshot, snapshotChanges, snapshot } = this.props;
+    const {
+      selectedComponent,
+      selectedSnapshot,
+      snapshotChanges,
+      snapshot
+    } = this.props;
 
     return (
       <div>
@@ -42,8 +32,7 @@ class SelectFakeProps extends Component<Props> {
 
         <div className="buttons-container">
           {selectedSnapshot === "default" ? null : (
-            <div
-              className="button"
+            <Button
               onClick={() =>
                 this.props.handleSnapshots({
                   restMethod: "put",
@@ -53,12 +42,12 @@ class SelectFakeProps extends Component<Props> {
                 })
               }
             >
-              EDIT
-            </div>
+              Edit
+            </Button>
           )}
 
-          <div
-            className="button"
+          <Button
+            type="primary"
             onClick={() =>
               this.props.handleSnapshots({
                 restMethod: "post",
@@ -68,11 +57,12 @@ class SelectFakeProps extends Component<Props> {
               })
             }
           >
-            NEW SNAPSHOT
-          </div>
+            New
+          </Button>
+
           {this.props.selectedSnapshot === "default" ? null : (
-            <div
-              className="button"
+            <Button
+              type="danger"
               onClick={() =>
                 this.props.handleSnapshots({
                   restMethod: "del",
@@ -80,9 +70,10 @@ class SelectFakeProps extends Component<Props> {
                   snapshot: selectedSnapshot
                 })
               }
+              ghost
             >
-              DELETE
-            </div>
+              Delete
+            </Button>
           )}
         </div>
       </div>
@@ -95,7 +86,8 @@ const mapStateToProps = state => ({
   selectedComponent: state.cde.selectedComponent,
   selectedSnapshot: state.cde.selectedSnapshot,
   snapshotChanges: state.cde.snapshotChanges,
-  snapshot: state.cde.snapshot
+  snapshot: state.cde.snapshot,
+  propsAst: state.cde.propsAst
 });
 
 export default connect(mapStateToProps, {
