@@ -25,7 +25,8 @@ export const initialState = {
 const cdeReducer = (state = initialState, { type, payload }) => {
   switch (type) {
     case types.SELECT_COMPONENT:
-      const selectedComponent = { selectedComponent: payload };
+      if (state.selectedComponent === payload.key) return state;
+      const selectedComponent = { selectedComponent: payload.key };
       return {
         ...state,
         ...selectedComponent,
@@ -33,6 +34,7 @@ const cdeReducer = (state = initialState, { type, payload }) => {
       };
 
     case types.SELECT_TAB:
+      if (state.selectedTab === payload) return state;
       return {
         ...state,
         ...{ selectedTab: payload },
@@ -40,7 +42,8 @@ const cdeReducer = (state = initialState, { type, payload }) => {
       };
 
     case types.SELECT_SNAPSHOT:
-      return { ...state, ...{ selectedSnapshot: payload } };
+      if (state.snapshot === payload.key) return state;
+      return { ...state, ...{ selectedSnapshot: payload.key } };
 
     case types.UPDATE_SNAPSHOT:
       const snapshotChanges = {
