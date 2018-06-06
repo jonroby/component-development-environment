@@ -3,11 +3,14 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 
+import { Layout } from "antd";
 import { fetchComponentData } from "../redux/actions/cde";
 import CDE from "./CDE";
-import ComponentBar from "./ComponentBar";
+import ComponentMenu from "./ComponentBar";
 
 import "./CDEScreen.css";
+
+const { Header, Footer, Sider, Content } = Layout;
 
 class CDEScreen extends Component {
   componentDidMount() {
@@ -31,10 +34,21 @@ class CDEScreen extends Component {
 
   render() {
     return (
-      <div className="cde-screen">
-        <div className="cde-screen-padding-left" />
-        <ComponentBar />
-        <CDE />
+      <div>
+        <Layout>
+          <Sider theme='light' width={256} style={{borderRight: '1px solid #e8e8e8'}}>
+            <div className="cde-component-name">
+              <div>Storybook</div>
+            </div>
+
+            <ComponentMenu />
+          </Sider>
+          <Layout>
+            <Header style={{backgroundColor: 'white'}}>{this.props.selectedComponent}</Header>
+            <Content style={{backgroundColor: 'white', paddingLeft: '50px'}}><CDE /></Content>
+            <Footer style={{backgroundColor: 'white'}}>Footer</Footer>
+          </Layout>
+        </Layout>
       </div>
     );
   }
