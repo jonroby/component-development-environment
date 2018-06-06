@@ -8,7 +8,8 @@ import ComponentView from "./ComponentView";
 import TypesTable from "./TypesTable";
 import SelectFakeProps from "./SelectFakeProps.js";
 import { selectSnapshot } from "../redux/actions/cde";
-import "./CDE.css";
+
+// import "./CDE.css";
 
 class CDE extends Component {
   renderSelectedTab = () => {
@@ -35,40 +36,15 @@ class CDE extends Component {
     return opts[this.props.selectedTab];
   };
 
-  renderSnapshots = () => {
-    if (!this.props.snapshotNames) return;
-
-    const snapshots = this.props.snapshotNames.map(s => {
-      return (
-        <div
-          className={
-            s === this.props.selectedSnapshot ? "snapshot-selected" : "snapshot"
-          }
-          onClick={() => this.props.selectSnapshot(s)}
-        >
-          {s}
-        </div>
-      );
-    });
-
-    return <div className="snapshots-container">{snapshots}</div>;
-  };
-
   render() {
     return (
       <div className="cde">
-        <div>
-          <div className="cde-component-name">
-            <div>{this.props.selectedComponent}</div>
-            {this.renderSnapshots()}
-          </div>
-          <Tabs />
-          {this.renderSelectedTab()}
-        </div>
+        <Tabs />
       </div>
     );
   }
 }
+// {this.renderSelectedTab()}
 
 const mapStateToProps = state => ({
   selectedComponent: state.cde.selectedComponent,

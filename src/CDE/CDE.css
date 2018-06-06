@@ -7,47 +7,22 @@
 }
 
 .cde > div {
-    width: 82%;
+    width: 92%;
 }
 
-
 .cde-component-name {
-    font-size: 21px;
-    padding-bottom: 20px;
-    padding-top: 20px;
-    height: 113px;
+    width: 100%;
+    font-size: 16px;
+    height: 60px;
     display: flex;
     align-items: center;
-    border-bottom: 1px solid #e8e8e8;
+    justify-content: center;
 }
 
 .code {
     font-family: 'Menlo';
-    font-size: 16px;
+    border-radius: 0px;
+    border: 1px solid #e8e8e8;
     background-color: #f5f5f5;
-    padding: 20px;
 }
-
-.snapshots-container {
-    display: flex;
-}
-
-.snapshots-container div {
-    padding-left: 40px;
-}
-
-.snapshot-selected {
-    font-size: 16px;
-    color: #1978c8;
-}
-
-.snapshot {
-    font-size: 16px;
-}
-
-.snapshot:hover {
-    color: #f28a25;
-    cursor: pointer;
-}
-
 
