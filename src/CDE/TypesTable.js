@@ -2,38 +2,57 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
+import { Table } from "antd";
 
 import "./TypesTable.css";
 
 class TypesTable extends Component<Props> {
-  renderTypesTable = propsAst => {
-    if (!propsAst) return null;
+  getColumns = () => {
+    return [
+      {
+        title: "Prop",
+        dataIndex: "prop",
+        key: "prop"
+      },
+      {
+        title: "Type",
+        dataIndex: "type",
+        key: "type",
+        render: (text, record, index) => {
+          console.log("text ", text);
+          return <pre>{text}</pre>;
+        }
+      },
+      {
+        title: "Required",
+        dataIndex: "required",
+        key: "required"
+      }
+    ];
+  };
 
-    return Object.keys(propsAst).map(i => {
-      return (
-        <tr>
-          <td className="types-table-code">{i}</td>
-          <td className="types-table-code">
-            <pre>{propsAst[i].flowType.raw || propsAst[i].flowType.name}</pre>
-          </td>
-          <td>{propsAst[i].required.toString()}</td>
-        </tr>
-      );
-    });
+  getDataSource = propsAst => {
+    return Object.keys(propsAst.props).map((prop, i) => ({
+      key: String(i),
+      prop,
+      type:
+        propsAst.props[prop].flowType.raw || propsAst.props[prop].flowType.name,
+      required: propsAst.props[prop].required.toString()
+    }));
   };
 
   render() {
-    if (!this.props.propsAst) return null;
+    const { propsAst } = this.props;
+    if (!propsAst.props) return null;
+
     return (
-      <div className="types-table">
-        <table>
-          <tr className="table-headers-container">
-            <th align="left">PropName</th>
-            <th align="left">Type</th>
-            <th align="left">Required</th>
-          </tr>
-          {this.renderTypesTable(this.props.propsAst.props)}
-        </table>
+      <div>
+        <Table
+          dataSource={this.getDataSource(propsAst)}
+          columns={this.getColumns()}
+          bordered
+          pagination={false}
+        />
       </div>
     );
   }
