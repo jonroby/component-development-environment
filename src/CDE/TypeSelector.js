@@ -29,13 +29,13 @@ function TypeSelector(props) {
   function render(prop, path) {
     switch (changeCase.lowerCase(prop.name)) {
       case "number":
-        return createNumber(prop, path + "/number");
+        return createPrimitive(prop, path + "/number");
 
       case "string":
-        return createString(prop, path + "/string");
+        return createPrimitive(prop, path + "/string");
 
       case "boolean":
-        return createBoolean(prop, path + "/boolean");
+        return createPrimitive(prop, path + "/boolean");
 
       // case "void":
       //   return null; // undefined?
@@ -66,29 +66,16 @@ function TypeSelector(props) {
     }
   }
 
-  function createNumber(prop, path) {
+  function createPrimitive(prop, path) {
     return (
-      <div className="key-value-pairs">
-        <div className="flow-type">{prop.name}</div>
+      <div>
         <div>
-          <CustomOptions
-            snapshot={props.snapshot}
-            path={path}
-            currentOption={props.snapshot[path]}
-          />
+          <code>{prop.name}</code>
         </div>
-      </div>
-    );
-  }
-
-  function createString(prop, path) {
-    return (
-      <div className="key-value-pairs">
-        <div>{prop.name}</div>
         <div>
           <CustomOptions
-            path={path}
             snapshot={props.snapshot}
+            path={path}
             currentOption={props.snapshot[path]}
           />
         </div>
@@ -128,8 +115,10 @@ function TypeSelector(props) {
     });
 
     return (
-      <div className="arr-obj-container">
-        <div className="key">{prop.name}</div>
+      <div className="arr-container">
+        <div className="key">
+          <code>{prop.name}</code>
+        </div>
 
         <div className="value">{typesInArray.map(i => i)}</div>
       </div>
@@ -141,8 +130,10 @@ function TypeSelector(props) {
 
     const propertiesList = properties.map(p => {
       return (
-        <div className="key-value-pairs">
-          <div className="type">{p.key}</div>
+        <div className="obj-container">
+          <div>
+            <code>{p.key}</code>
+          </div>
 
           <div>{render(p.value, path)}</div>
         </div>
