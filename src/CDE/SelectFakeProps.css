@@ -1,22 +1,19 @@
-.custom-types {
-    display: flex;
-}
-
-.custom-types div {
-
-}
 
 
 .buttons-container {
     display: flex;
-    padding-top: 20px;
+    /* padding-top: 20px; */
+    padding-bottom: 20px;
 }
 
+.buttons-container input {
+    width: 21%;
+    margin-left: 2px;
 
+    margin-right: 10px;
+}
 
-.button {
-    border: 1px solid gray;
-    cursor: hover;
-    margin-right: 20px;
+.buttons-container button {
+    margin-right: 10px;
 }
 
