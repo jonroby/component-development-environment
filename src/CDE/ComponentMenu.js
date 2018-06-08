@@ -4,19 +4,15 @@ import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Menu, Icon } from "antd";
 import { selectComponent, selectSnapshot } from "../redux/actions/cde";
+import { getVisibleComponentNames } from '../redux/reducers/cde';
+
 // import "./ComponentMenu.css";
 
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
 class ComponentMenu extends Component {
-  rootSubmenuKeys = ["sub1", "sub2", "sub4"];
-  state = {
-    openKeys: ["sub1"]
-  };
-
   onOpenChange = openKeys => {
-    console.log("openKeys ", openKeys);
     const latestOpenKey = openKeys.find(
       key => this.props.componentNames.indexOf(key) === -1
     );
@@ -54,7 +50,7 @@ class ComponentMenu extends Component {
       return null;
 
     return this.props.snapshotNames.map((snapshotName, i) => {
-      const key = i === 0 ? "default" : `snapshot${i}`;
+      const key = i === 0 ? "default" : snapshotName;
       return (
         <Menu.Item onClick={this.props.selectSnapshot} key={key}>
           {snapshotName}
@@ -70,6 +66,7 @@ class ComponentMenu extends Component {
       <Menu
         style={{ width: 256 }}
         defaultSelectedKeys={["default"]}
+        selectedKeys={[this.props.selectedSnapshot]}
         mode="inline"
         openKeys={[this.props.selectedComponent]}
         onOpenChange={this.onOpenChange}
@@ -89,7 +86,8 @@ const mapStateToProps = state => ({
   componentNames: state.cde.componentNames,
   selectedComponent: state.cde.selectedComponent,
   snapshotNames: state.cde.snapshotNames,
-  selectedSnapshot: state.cde.selectedSnapshot
+  selectedSnapshot: state.cde.selectedSnapshot,
+  componentNames: getVisibleComponentNames(state)
 });
 
 export default connect(mapStateToProps, { selectComponent, selectSnapshot })(
