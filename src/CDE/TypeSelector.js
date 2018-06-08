@@ -3,10 +3,10 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import changeCase from "change-case";
-
+import { Collapse } from "antd";
 import CustomOptions from "./CustomOptions";
-
 import "./TypeSelector.css";
+const Panel = Collapse.Panel;
 
 function isObject(value) {
   return value && typeof value === "object" && value.constructor === Object;
@@ -14,14 +14,15 @@ function isObject(value) {
 
 function TypeSelector(props) {
   function renderInspector(flowAst, snapshot) {
-    return Object.keys(flowAst.props).map(key => {
+    return Object.keys(flowAst.props).map((key, i) => {
       return (
-        <div className="key-value-container">
-          <div className="key">{key}</div>
-          <div className="value">
-            {render(flowAst.props[key].flowType, key)}
+        <Panel header={key} key={`${key}${i}`}>
+          <div className="prop-type-container">
+            <div className="prop-type">
+              {render(flowAst.props[key].flowType, key)}
+            </div>
           </div>
-        </div>
+        </Panel>
       );
     });
   }
@@ -68,17 +69,16 @@ function TypeSelector(props) {
 
   function createPrimitive(prop, path) {
     return (
-      <div>
-        <div>
+      <div className="primitive-container">
+        <div className="primitive">
           <code>{prop.name}</code>
         </div>
-        <div>
-          <CustomOptions
-            snapshot={props.snapshot}
-            path={path}
-            currentOption={props.snapshot[path]}
-          />
-        </div>
+
+        <CustomOptions
+          snapshot={props.snapshot}
+          path={path}
+          currentOption={props.snapshot[path]}
+        />
       </div>
     );
   }
@@ -131,7 +131,7 @@ function TypeSelector(props) {
     const propertiesList = properties.map(p => {
       return (
         <div className="obj-container">
-          <div>
+          <div className="key">
             <code>{p.key}</code>
           </div>
 
@@ -141,9 +141,10 @@ function TypeSelector(props) {
     });
 
     return (
-      <div className="arr-obj-container">
-        <div className="key">object</div>
-
+      <div className="arr-container">
+        <div className="key">
+          <code>object</code>
+        </div>
         <div className="value">{propertiesList}</div>
       </div>
     );
@@ -155,7 +156,13 @@ function TypeSelector(props) {
     return () => ret;
   }
 
-  return renderInspector(props.propsAst, props.snapshot);
+  return (
+    <div>
+      <Collapse onChange={callback}>
+        {renderInspector(props.propsAst, props.snapshot)}
+      </Collapse>
+    </div>
+  );
 }
 
 export default TypeSelector;
