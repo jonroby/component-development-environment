@@ -6,18 +6,24 @@ export const initialState = {
   componentNames: Object.keys(components),
   selectedComponent: Object.keys(components)[0],
 
+  componentSearchInput: "",
+
   snapshotNames: ["default"],
   selectedSnapshot: "default",
 
   snapshotChanges: {},
+  snapshotStatus: {
+    action: "",
+    status: "none"
+  },
+
   fakeProps: {},
   customTypes: {},
   propsAsts: {},
 
   // selectedTab only recomputed off of tabs, which are static
   tabs: ["Component", "Custom", "Types", "Code"],
-  selectedTab: "Component",
-
+  selectedTab: "Component"
 };
 
 // Currently clearing snapshotChanges on a number of changes
@@ -53,91 +59,56 @@ const cdeReducer = (state = initialState, { type, payload }) => {
 
       return { ...state, snapshotChanges };
 
-  case types.FETCH_COMPONENT_DATA:
-    return state;
+    case types.UPDATE_COMPONENT_SEARCH_INPUT:
+      return { ...state, componentSearchInput: payload };
 
-  case types.FETCH_COMPONENT_DATA_SUCCESS:
-    return { ...state, ...payload };
-    return state;
+    case types.FETCH_COMPONENT_DATA:
+      return state;
 
-  case types.FETCH_COMPONENT_DATA_FAILURE:
-    return state;
+    case types.FETCH_COMPONENT_DATA_SUCCESS:
+      return { ...state, ...payload };
+      return state;
 
-  case types.HANDLE_SNAPSHOTS:
-    return state;
+    case types.FETCH_COMPONENT_DATA_FAILURE:
+      return state;
 
-  case types.HANDLE_SNAPSHOTS_SUCCESS:
-    return { ...state, ...payload };
+    case types.HANDLE_SNAPSHOTS:
+      return {
+        ...state,
+        snapshotStatus: { action: payload.restMethod, status: "loading" }
+      };
 
-  case types.HANDLE_SNAPSHOTS_FAILURE:
-    return state;
+    case types.HANDLE_SNAPSHOTS_SUCCESS:
+      return {
+        ...state,
+        ...payload,
+        snapshotStatus: { ...state.snapshotStatus, status: "success" }
+      };
 
-
-
-
-
-    // case types.FETCH_FAKE_PROPS:
-    //   return state;
-
-    // case types.FETCH_FAKE_PROPS_SUCCESS:
-    //   const fakeProps = {
-    //     ...state.fakeProps,
-    //     ...payload
-    //   };
-
-    //   return { ...state, fakeProps };
-
-    // case types.FETCH_FAKE_PROPS_FAILURE:
-    //   return state;
-
-    // case types.FETCH_PROPS_ASTS:
-    //   return state;
-
-    // case types.FETCH_PROPS_ASTS_SUCCESS:
-    //   const propsAsts = {
-    //     ...state.propsAsts,
-    //     ...payload
-    //   };
-
-    //   return { ...state, propsAsts };
-
-    // case types.FETCH_PROPS_ASTS_FAILURE:
-    //   return state;
-
-    // case types.FETCH_CUSTOM_TYPES:
-    //   return state;
-
-    // case types.FETCH_CUSTOM_TYPES_SUCCESS:
-    //   return { ...state, ...payload, snapshotChanges: {} };
-
-    // case types.FETCH_CUSTOM_TYPES_FAILURE:
-    //   return state;
-
-    // case types.POST_CUSTOM_TYPES:
-    //   return { ...state, snapshotChanges: {} };
-
-    // case types.POST_CUSTOM_TYPES_SUCCESS:
-    //   return { ...state, ...{ customTypes: payload }, snapshotChanges: {} };
-
-    // case types.POST_CUSTOM_TYPES_FAILURE:
-    //   return state;
-
-    // case types.DEL_CUSTOM_TYPES:
-    //   return { ...state, snapshotChanges: {} };
-
-    // case types.DEL_CUSTOM_TYPES_SUCCESS:
-    //   return {
-    //     ...state,
-    //     ...payload,
-    //     snapshotChanges: {},
-    //     selectedSnapshot: "default"
-    //   };
-
-    // case types.DEL_CUSTOM_TYPES_FAILURE:
-    //   return state;
+    case types.HANDLE_SNAPSHOTS_FAILURE:
+      return {
+        ...state,
+        snapshotSuccess: { ...state.snapshotStatus, status: "failure" }
+      };
 
     default:
       return state;
+  }
+};
+
+export const getVisibleComponentNames = state => {
+  if (!state.cde.componentNames) {
+    return [];
+  } else if (state.cde.searchComponentNameInput === "") {
+    return state.componentNames;
+  } else {
+    return state.cde.componentNames.filter(componentName => {
+      return (
+        componentName
+          .toLowerCase()
+          .match(state.cde.componentSearchInput.toLowerCase()) !== null
+      );
+    });
   }
 };
 
