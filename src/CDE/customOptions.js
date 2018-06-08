@@ -1,11 +1,13 @@
 // @flow
 
 import React, { Component } from "react";
-import { connect } from 'react-redux';
+import { connect } from "react-redux";
+import { Menu, Dropdown, Icon } from "antd";
 import options from "./fake_options";
-import { updateSnapshot } from '../redux/actions/cde.js';
-
+import { updateSnapshot } from "../redux/actions/cde.js";
 import "./CustomOptions.css";
+
+const SubMenu = Menu.SubMenu;
 
 class CustomOptions extends Component<Props> {
   constructor(props) {
@@ -26,75 +28,56 @@ class CustomOptions extends Component<Props> {
   }
 
   componentDidUpdate(prevProps) {
-    if (this.state.currentOption !== "" && (this.props.currentOption === prevProps.currentOption)) return;
+    if (
+      this.state.currentOption !== "" &&
+      this.props.currentOption === prevProps.currentOption
+    )
+      return;
     this.setState({
       currentOption:
         (this.props.currentOption && this.props.currentOption.item) || "default"
     });
   }
 
-  renderOptions = () => {
-    if (!this.state.showOptions) return null;
-    return Object.keys(options).map(option => {
-      const renderSuboptions = suboptions => {
-        return suboptions.map(suboption => {
+  render() {
+    const onClick = (option, suboption) => {
+      this.props.updateSnapshot({
+        [this.props.path]: { section: option, item: suboption }
+      });
+
+      this.setState({
+        currentOption: suboption,
+        showOptions: false,
+        selectedOption: "",
+        selectedSuboption: ""
+      });
+    };
+
+    const menu = () => {
+      const submenus = () => {
+        return Object.keys(options).map(option => {
           return (
-            <div className="suboption">
-              <div
-                onClick={() => {
-                  this.props.updateSnapshot({
-                    [this.props.path]: { section: option, item: suboption }
-                  });
-                  this.setState({
-                    currentOption: suboption,
-                    showOptions: false,
-                    selectedOption: "",
-                    selectedSuboption: ""
-                  });
-                }}
-              >
-                {suboption}
-              </div>
-            </div>
+            <SubMenu title={option}>
+              {options[option].map(suboption => (
+                <Menu.Item onClick={() => onClick(option, suboption)}>
+                  {suboption}
+                </Menu.Item>
+              ))}
+            </SubMenu>
           );
         });
       };
 
-      return (
-        <div className="menu">
-          <div className="options">
-            <div
-              className="option"
-              onClick={() => {
-                this.setState({
-                  selectedOption:
-                    this.state.selectedOption === option ? "" : option
-                });
-              }}
-            >
-              <div>&#9655;</div>
-              <div>{option}</div>
-            </div>
-            {this.state.selectedOption === option
-              ? renderSuboptions(options[option])
-              : null}
-          </div>
-        </div>
-      );
-    });
-  };
+      return <Menu>{submenus()}</Menu>;
+    };
 
-  render() {
     return (
       <div className="options">
-        <div
-          onClick={() =>
-            this.setState({ showOptions: !this.state.showOptions })
-          }
-        >
-          {this.state.currentOption}
-        </div>
-        {this.renderOptions()}
+        <Dropdown overlay={menu()}>
+          <a className="ant-dropdown-link" href="#">
+            {this.state.currentOption} <Icon type="down" />
+          </a>
+        </Dropdown>
       </div>
     );
   }
