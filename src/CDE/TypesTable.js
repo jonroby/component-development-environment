@@ -12,14 +12,16 @@ class TypesTable extends Component<Props> {
       {
         title: "Prop",
         dataIndex: "prop",
-        key: "prop"
+        key: "prop",
+        render: (text, record, index) => {
+          return <pre>{text}</pre>;
+        }
       },
       {
         title: "Type",
         dataIndex: "type",
         key: "type",
         render: (text, record, index) => {
-          console.log("text ", text);
           return <pre>{text}</pre>;
         }
       },
