@@ -1,12 +1,12 @@
-let post  = ({ component, snapshot, snapshotChanges }) => ({
+let post  = ({ component, snapshot, name, snapshotChanges }) => ({
   path: `/snapshots/${component}/${snapshot}`,
-  body: { snapshotChanges },
+  body: { name, snapshotChanges },
 });
 
 
-let put  = ({ component, snapshot, snapshotChanges }) => ({
+let put  = ({ component, snapshot, name, snapshotChanges }) => ({
   path: `/snapshots/${component}/${snapshot}`,
-  body: { snapshotChanges }
+  body: { name, snapshotChanges }
 });
 
 
