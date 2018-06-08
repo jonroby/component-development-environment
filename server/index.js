@@ -19,16 +19,21 @@ router
 
 app.use(router.routes());
 
+const filepaths = {
+  propsAsts: "./server/flow/flow_asts.js",
+  customTypes: "./server/flow/custom_types.js"
+};
+
 async function getComponentData(ctx) {
   // 1: Get comp flow props (props ast)
-  const propsAsts = fs.readFileSync("./flow/flow_asts.js", "utf8");
+  const propsAsts = fs.readFileSync(filepaths.propsAsts, "utf8");
   const propsAst = JSON.parse(propsAsts)[ctx.params.component];
 
   // 2: Get snapshots (custom types)
   const selectedSnapshot = ctx.query.snapshot ? ctx.query.snapshot : "default";
-  const snapshots = JSON.parse(
-    fs.readFileSync("./flow/custom_types.js", "utf8")
-  )[ctx.params.component];
+  const snapshots = JSON.parse(fs.readFileSync(filepaths.customTypes, "utf8"))[
+    ctx.params.component
+  ];
 
   const snapshotNames = Object.keys(snapshots);
 
@@ -44,16 +49,18 @@ async function getComponentData(ctx) {
 async function postSnapshot(ctx) {
   const body = ctx.request.body;
   const customTypes = JSON.parse(
-    fs.readFileSync("./flow/custom_types.js", "utf8")
+    fs.readFileSync(filepaths.customTypes, "utf8")
   );
 
   const snapshotName =
-    "snapshot_" +
-    (Object.keys(customTypes[ctx.params.component])
-      .filter(name => name.match(/snapshot_[0-9]+/))
-      .map(name => Number(name.split("_")[1]))
-      .reduce((acc, curr) => (curr > acc ? curr : acc), 0) +
-      1);
+    body.name !== "default" && body.name !== ctx.params.snapshot
+      ? body.name
+      : "snapshot_" +
+        (Object.keys(customTypes[ctx.params.component])
+          .filter(name => name.match(/snapshot_[0-9]+/))
+          .map(name => Number(name.split("_")[1]))
+          .reduce((acc, curr) => (curr > acc ? curr : acc), 0) +
+          1);
 
   const currentSnapshot =
     customTypes[ctx.params.component][ctx.params.snapshot] ||
@@ -72,10 +79,8 @@ async function postSnapshot(ctx) {
 
   const newCustomTypes = Object.assign({}, customTypes, newComponent);
 
-  console.log("newCustomTypes ", newCustomTypes);
-
   fs.writeFileSync(
-    "./flow/custom_types.js",
+    filepaths.customTypes,
     JSON.stringify(newCustomTypes),
     "utf8"
   );
@@ -84,13 +89,13 @@ async function postSnapshot(ctx) {
   // TODO: Put this into single helper function
 
   // 1
-  const propsAsts = fs.readFileSync("./flow/flow_asts.js", "utf8");
+  const propsAsts = fs.readFileSync(filepaths.propsAsts, "utf8");
   const propsAst = JSON.parse(propsAsts)[ctx.params.component];
 
   // 2
-  const snapshots = JSON.parse(
-    fs.readFileSync("./flow/custom_types.js", "utf8")
-  )[ctx.params.component];
+  const snapshots = JSON.parse(fs.readFileSync(filepaths.customTypes, "utf8"))[
+    ctx.params.component
+  ];
 
   const snapshotNames = Object.keys(snapshots);
 
@@ -107,32 +112,38 @@ async function putSnapshot(ctx) {
   const body = ctx.request.body;
 
   const customTypes = JSON.parse(
-    fs.readFileSync("./flow/custom_types.js", "utf8")
+    fs.readFileSync(filepaths.customTypes, "utf8")
   );
 
-  const snapshotName = ctx.params.snapshot;
+  const snapshotName = body.name;
   const currentSnapshot =
     customTypes[ctx.params.component][ctx.params.snapshot];
   const newSnapshot = Object.assign({}, currentSnapshot, body.snapshotChanges);
 
   const newSnapshotWithKey = { [snapshotName]: newSnapshot };
 
+  let editedCustomType = Object.assign(
+    {},
+    customTypes[ctx.params.component],
+    newSnapshotWithKey
+  );
+
+  // if the name is being edited, remove the old name (filter it out when creating new object)
+  if (body.name !== ctx.params.snapshot) {
+    editedCustomType = Object.keys(editedCustomType).reduce((acc, curr) => {
+      if (curr === ctx.params.snapshot) return acc;
+      return Object.assign({}, acc, { [curr]: editedCustomType[curr] });
+    }, {});
+  }
+
   const newComponent = {
-    [ctx.params.component]: Object.assign(
-      {},
-      customTypes[ctx.params.component],
-      newSnapshotWithKey
-    )
+    [ctx.params.component]: editedCustomType
   };
 
   const newCustomTypes = Object.assign({}, customTypes, newComponent);
 
-  console.log("newCustomTypes ", newCustomTypes);
-
-  ctx.body = {};
-
   fs.writeFileSync(
-    "./flow/custom_types.js",
+    filepaths.customTypes,
     JSON.stringify(newCustomTypes),
     "utf8"
   );
@@ -141,28 +152,35 @@ async function putSnapshot(ctx) {
   // TODO: Put this into single helper function
 
   // 1
-  const propsAsts = fs.readFileSync("./flow/flow_asts.js", "utf8");
+  const propsAsts = fs.readFileSync(filepaths.propsAsts, "utf8");
   const propsAst = JSON.parse(propsAsts)[ctx.params.component];
 
   // 2
-  const snapshots = JSON.parse(
-    fs.readFileSync("./flow/custom_types.js", "utf8")
-  )[ctx.params.component];
+  const snapshots = JSON.parse(fs.readFileSync(filepaths.customTypes, "utf8"))[
+    ctx.params.component
+  ];
 
   const snapshotNames = Object.keys(snapshots);
 
-  const snapshot = snapshots[ctx.params.snapshot];
+  const snapshot = snapshots[snapshotName];
 
   // 3: Generate fake data (fake props)
   const fakeProps = createFakeProps(propsAst, snapshot);
 
   // 4: send it all back
-  ctx.body = { fakeProps, snapshot, snapshotNames, propsAst };
+  ctx.body = {
+    fakeProps,
+    snapshot,
+    snapshotNames,
+    propsAst,
+    selectedSnapshot: snapshotName
+  };
 }
 
 async function delSnapshot(ctx) {
+  console.log("ctx ", ctx);
   const customTypes = JSON.parse(
-    fs.readFileSync("./flow/custom_types.js", "utf8")
+    fs.readFileSync(filepaths.customTypes, "utf8")
   );
 
   const newComponentCustomTypes = Object.keys(customTypes[ctx.params.component])
@@ -180,7 +198,7 @@ async function delSnapshot(ctx) {
 
   // TODO: error handling and read from the saved file
   fs.writeFileSync(
-    "./flow/custom_types.js",
+    filepaths.customTypes,
     JSON.stringify(newCustomTypes),
     "utf8"
   );
@@ -188,13 +206,13 @@ async function delSnapshot(ctx) {
   // Repeat steps from getComponentData
 
   // 1
-  const propsAsts = fs.readFileSync("./flow/flow_asts.js", "utf8");
+  const propsAsts = fs.readFileSync(filepaths.propsAsts, "utf8");
   const propsAst = JSON.parse(propsAsts)[ctx.params.component];
 
   // 2
-  const snapshots = JSON.parse(
-    fs.readFileSync("./flow/custom_types.js", "utf8")
-  )[ctx.params.component];
+  const snapshots = JSON.parse(fs.readFileSync(filepaths.customTypes, "utf8"))[
+    ctx.params.component
+  ];
 
   const snapshotNames = Object.keys(snapshots);
 
@@ -213,4 +231,4 @@ async function delSnapshot(ctx) {
   };
 }
 
-if (!module.parent) app.listen(3000);
+if (!module.parent) app.listen(3001);
