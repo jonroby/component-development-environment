@@ -3,28 +3,16 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import changeCase from "change-case";
-import { Collapse, Checkbox, Button } from "antd";
+import { Collapse, Checkbox, Button, Radio } from "antd";
 import { updateSnapshot } from "../redux/actions/cde.js";
 import CustomOptions from "./CustomOptions";
 import "./TypeSelector.css";
 const Panel = Collapse.Panel;
+const RadioGroup = Radio.Group;
 
 function isObject(value) {
   return value && typeof value === "object" && value.constructor === Object;
 }
-
-// const onClick = (option, suboption) => {
-//   this.props.updateSnapshot({
-//     [this.props.path]: { section: option, item: suboption }
-//   });
-
-//   this.setState({
-//     currentOption: suboption,
-//     showOptions: false,
-//     selectedOption: "",
-//     selectedSuboption: ""
-//   });
-// };
 
 class TypeSelector extends Component {
   constructor(props) {
@@ -36,10 +24,37 @@ class TypeSelector extends Component {
   renderInspector = (flowAst, snapshot) => {
     return Object.keys(flowAst.props).map((key, i) => {
       const required = flowAst.props[key].required;
+      const path = `${key}`;
+
+      let buttonType;
+      if (
+        this.props.snapshotChanges[path] &&
+        this.props.snapshotChanges[path].isPresent
+      ) {
+        buttonType = true;
+      } else if (
+        this.props.snapshotChanges[path] &&
+        !this.props.snapshotChanges[path].isPresent
+      ) {
+        buttonType = false;
+      } else if (this.props.snapshot[path] === undefined) {
+        buttonType = true;
+      } else if (this.props.snapshot[path] === "default") {
+        buttonType = true;
+      } else if (this.props.snapshot[path].isPresent) {
+        buttonType = true;
+      } else if (!this.props.snapshot[path].isPresent) {
+        buttonType = false;
+      }
+
       return (
         <Panel header={key} key={`${key}${i}`}>
           <div className="prop-type-container">
-            <Checkbox onChange={this.onChange} disabled={required}>
+            <Checkbox
+              onChange={() => this.onClickIsPresent(path, this.props.snapshot)}
+              disabled={required}
+              checked={buttonType}
+            >
               Maybe
             </Checkbox>
             <div className="prop-type">
@@ -51,8 +66,33 @@ class TypeSelector extends Component {
     });
   };
 
-  onChange = e => {
-    console.log(`checked = ${e.target.checked}`);
+  onClickIsPresent = (path, snapshot) => {
+    const curr = snapshot[path] || "default";
+    let isPresent;
+
+    if (
+      this.props.snapshotChanges[path] &&
+      this.props.snapshotChanges[path].isPresent
+    ) {
+      isPresent = false;
+    } else if (
+      this.props.snapshotChanges[path] &&
+      !this.props.snapshotChanges[path].isPresent
+    ) {
+      isPresent = true;
+    } else if (
+      curr === "default" ||
+      curr.isPresent ||
+      curr.isPresent === undefined
+    ) {
+      isPresent = false;
+    } else if (curr.isPresent === false) {
+      isPresent = true;
+    }
+
+    this.props.updateSnapshot({
+      [path]: { isPresent }
+    });
   };
 
   caseRender(prop, path) {
@@ -83,25 +123,66 @@ class TypeSelector extends Component {
       //   return createFunction(prop, paths, path + '/function');
       // }
 
-      // case "union":
-      //   return createUnion(prop, paths, path + '/union');
+      case "union":
+        return this.createUnion(prop, path + "/union");
 
       // case "literal":
       //   // TODO: react-docgen changes true to 'true', 1 to '1', 'hello' to '"hello"'
-      //   return createLiteral(prop, paths, path + '/literal');
+      //   return createLiteral(prop, paths, path + "/literal");
 
       default:
         console.log("No match.");
     }
   }
 
-  createPrimitive(prop, path) {
+  renderButton = (mustBePresent, path, buttonText) => {
+    // TODO: CLEAN THIS UP!
+    let buttonType;
+    console.log("path ", path);
+    console.log("this.props.snapshot[path] ", this.props.snapshot[path]);
+
+    if (mustBePresent) {
+      buttonType = "dashed";
+    } else if (
+      this.props.snapshotChanges[path] &&
+      this.props.snapshotChanges[path].isPresent
+    ) {
+      buttonType = "primary";
+    } else if (
+      this.props.snapshotChanges[path] &&
+      !this.props.snapshotChanges[path].isPresent
+    ) {
+      buttonType = "default";
+    } else if (this.props.snapshot[path] === undefined) {
+      buttonType = "primary";
+    } else if (this.props.snapshot[path] === "default") {
+      buttonType = "primary";
+    } else if (this.props.snapshot[path].isPresent) {
+      buttonType = "primary";
+    } else if (!this.props.snapshot[path].isPresent) {
+      buttonType = "default";
+    }
+
+    return (
+      <Button
+        onClick={
+          !mustBePresent
+            ? () => this.onClickIsPresent(path, this.props.snapshot)
+            : () => {}
+        }
+        type={buttonType}
+        size={"small"}
+      >
+        {buttonText}
+      </Button>
+    );
+  };
+
+  createPrimitive = (prop, path) => {
     return (
       <div className="primitive-container">
         <div className="key">
-          <Button type={prop.nullable ? "primary" : "dashed"} size={"small"}>
-            {prop.name}
-          </Button>
+          {this.renderButton(!prop.nullable, path, prop.name)}
         </div>
 
         <CustomOptions
@@ -111,7 +192,7 @@ class TypeSelector extends Component {
         />
       </div>
     );
-  }
+  };
 
   createBoolean = prop => {
     // return (
@@ -130,13 +211,30 @@ class TypeSelector extends Component {
     // return { [path]: "default" };
   };
 
-  createUnion = (prop, paths, path) => {
+  createUnion = (prop, path) => {
     // return render(prop.elements[0], paths, path);
-    // const red = prop.elements.reduce((acc, curr) => {
-    //   let el = render(curr, paths, path);
-    //   return Object.assign({}, acc, el);
-    // }, {});
-    // return { [path]: red };
+    console.log("prop ", prop);
+
+    const elements = prop.elements.map(el => {
+      console.log("el ", el);
+      return (
+        <div className="obj-container">
+          <Radio onChange={() => this.onChange()} checked={true} />
+
+          <div>{this.caseRender(el, path)}</div>
+        </div>
+      );
+    });
+
+    return (
+      <div className="arr-container">
+        <div className="key">
+          {this.renderButton(!prop.nullable, path, "union")}
+        </div>
+
+        <div className="value">{elements}</div>
+      </div>
+    );
   };
 
   createArray = (prop, path) => {
@@ -147,9 +245,7 @@ class TypeSelector extends Component {
     return (
       <div className="arr-container">
         <div className="key">
-          <Button type={prop.nullable ? "primary" : "dashed"} size={"small"}>
-            {prop.name}
-          </Button>
+          {this.renderButton(!prop.nullable, path, prop.name)}
         </div>
 
         <div className="value">{typesInArray.map(i => i)}</div>
@@ -164,15 +260,10 @@ class TypeSelector extends Component {
       return (
         <div className="obj-container">
           <div className="key">
-            <Button
-              type={!p.value.required ? "primary" : "dashed"}
-              size={"small"}
-            >
-              {p.key}
-            </Button>
+            {this.renderButton(p.value.required, path + `/${p.key}`, p.key)}
           </div>
 
-          <div>{this.caseRender(p.value, path)}</div>
+          <div>{this.caseRender(p.value, path + `/${p.key}`)}</div>
         </div>
       );
     });
@@ -180,9 +271,7 @@ class TypeSelector extends Component {
     return (
       <div className="arr-container">
         <div className="key">
-          <Button type={"dashed"} size={"small"}>
-            object
-          </Button>
+          {this.renderButton(prop.required, path, "object")}
         </div>
         <div className="value">{propertiesList}</div>
       </div>
@@ -206,4 +295,9 @@ class TypeSelector extends Component {
   }
 }
 
-export default connect(null, { updateSnapshot })(TypeSelector);
+const mapStateToProps = state => ({
+  snapshot: state.cde.snapshot,
+  snapshotChanges: state.cde.snapshotChanges
+});
+
+export default connect(mapStateToProps, { updateSnapshot })(TypeSelector);
