@@ -3,7 +3,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import changeCase from "change-case";
-import { Collapse } from "antd";
+import { Collapse, Checkbox, Button } from "antd";
 import CustomOptions from "./CustomOptions";
 import "./TypeSelector.css";
 const Panel = Collapse.Panel;
@@ -15,9 +15,13 @@ function isObject(value) {
 function TypeSelector(props) {
   function renderInspector(flowAst, snapshot) {
     return Object.keys(flowAst.props).map((key, i) => {
+      const required = flowAst.props[key].required;
       return (
         <Panel header={key} key={`${key}${i}`}>
           <div className="prop-type-container">
+            <Checkbox onChange={onChange} disabled={required}>
+              Maybe
+            </Checkbox>
             <div className="prop-type">
               {render(flowAst.props[key].flowType, key)}
             </div>
@@ -25,6 +29,10 @@ function TypeSelector(props) {
         </Panel>
       );
     });
+  }
+
+  function onChange(e) {
+    console.log(`checked = ${e.target.checked}`);
   }
 
   function render(prop, path) {
@@ -70,8 +78,10 @@ function TypeSelector(props) {
   function createPrimitive(prop, path) {
     return (
       <div className="primitive-container">
-        <div className="primitive">
-          <code>{prop.name}</code>
+        <div className="key">
+          <Button type={prop.nullable ? "primary" : "dashed"} size={"small"}>
+            {prop.name}
+          </Button>
         </div>
 
         <CustomOptions
@@ -117,7 +127,9 @@ function TypeSelector(props) {
     return (
       <div className="arr-container">
         <div className="key">
-          <code>{prop.name}</code>
+          <Button type={prop.nullable ? "primary" : "dashed"} size={"small"}>
+            {prop.name}
+          </Button>
         </div>
 
         <div className="value">{typesInArray.map(i => i)}</div>
@@ -132,7 +144,12 @@ function TypeSelector(props) {
       return (
         <div className="obj-container">
           <div className="key">
-            <code>{p.key}</code>
+            <Button
+              type={!p.value.required ? "primary" : "dashed"}
+              size={"small"}
+            >
+              {p.key}
+            </Button>
           </div>
 
           <div>{render(p.value, path)}</div>
@@ -143,7 +160,9 @@ function TypeSelector(props) {
     return (
       <div className="arr-container">
         <div className="key">
-          <code>object</code>
+          <Button type={"dashed"} size={"small"}>
+            object
+          </Button>
         </div>
         <div className="value">{propertiesList}</div>
       </div>
@@ -158,9 +177,7 @@ function TypeSelector(props) {
 
   return (
     <div>
-      <Collapse onChange={callback}>
-        {renderInspector(props.propsAst, props.snapshot)}
-      </Collapse>
+      <Collapse>{renderInspector(props.propsAst, props.snapshot)}</Collapse>
     </div>
   );
 }
