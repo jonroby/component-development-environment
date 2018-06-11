@@ -36,7 +36,8 @@ const cdeReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         ...selectedComponent,
-        ...{ selectedSnapshot: "default" }
+        ...{ selectedSnapshot: "default" },
+        ...{ snapshotChanges: {} }
       };
 
     case types.SELECT_TAB:
@@ -49,12 +50,25 @@ const cdeReducer = (state = initialState, { type, payload }) => {
 
     case types.SELECT_SNAPSHOT:
       if (state.snapshot === payload.key) return state;
-      return { ...state, ...{ selectedSnapshot: payload.key } };
+      return {
+        ...state,
+        ...{ selectedSnapshot: payload.key },
+        ...{ snapshotChanges: {} }
+      };
 
     case types.UPDATE_SNAPSHOT:
+      const newSnapshotChanges = Object.keys(payload).reduce((acc, curr) => {
+        return {
+          [curr]: {
+            ...state.snapshotChanges[curr],
+            ...payload[curr]
+          }
+        };
+      }, {});
+
       const snapshotChanges = {
         ...state.snapshotChanges,
-        ...payload
+        ...newSnapshotChanges
       };
 
       return { ...state, snapshotChanges };
@@ -66,7 +80,7 @@ const cdeReducer = (state = initialState, { type, payload }) => {
       return state;
 
     case types.FETCH_COMPONENT_DATA_SUCCESS:
-      return { ...state, ...payload };
+      return { ...state, ...payload, ...{ snapshotChanges: {} } };
       return state;
 
     case types.FETCH_COMPONENT_DATA_FAILURE:
@@ -82,7 +96,8 @@ const cdeReducer = (state = initialState, { type, payload }) => {
       return {
         ...state,
         ...payload,
-        snapshotStatus: { ...state.snapshotStatus, status: "success" }
+        snapshotStatus: { ...state.snapshotStatus, status: "success" },
+        ...{ snapshotChanges: {} }
       };
 
     case types.HANDLE_SNAPSHOTS_FAILURE:
