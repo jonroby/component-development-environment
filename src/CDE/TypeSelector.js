@@ -21,10 +21,6 @@ class TypeSelector extends Component {
     this.state = {};
   }
 
-  componentDidUpdate(prevProps) {
-    console.log('updating')
-  }
-
   renderInspector = (flowAst, snapshot) => {
     return Object.keys(flowAst.props).map((key, i) => {
       const required = flowAst.props[key].required;
@@ -71,9 +67,7 @@ class TypeSelector extends Component {
   };
 
   onClickUnionSelection = (path, snapshot) => {
-    console.log("clicked");
-
-    const curr = snapshot[path] || "default";
+    const curr = snapshot[path];
     let isSelected;
 
     if (
@@ -160,9 +154,6 @@ class TypeSelector extends Component {
   renderButton = (mustBePresent, path, buttonText) => {
     // TODO: CLEAN THIS UP!
     let buttonType;
-    console.log("path ", path);
-    console.log("this.props.snapshot[path] ", this.props.snapshotChanges);
-
     if (mustBePresent) {
       buttonType = "dashed";
     } else if (
@@ -236,57 +227,23 @@ class TypeSelector extends Component {
   //             checked={!this.props.snapshot[path].unselected}
 
   createUnion = (prop, path) => {
-    console.log("this.props.snapshot ", this.props.snapshot);
-    console.log("path ", path);
-    console.log("prop ", prop);
-
     const elements = prop.elements.map(el => {
-      let unselected;
+      let isSelected;
       let pathWithEl = path + `/${el.name}`;
-      if (
-        this.props.snapshotChanges[pathWithEl] &&
-        this.props.snapshotChanges[pathWithEl].unselected
-      ) {
-        unselected = true;
-      } else if (
-        this.props.snapshotChanges[pathWithEl] &&
-        this.props.snapshotChanges[pathWithEl].unselected === false
-      ) {
-        unselected = false;
-      } else if (
-        this.props.snapshot[pathWithEl] &&
-        this.props.snapshot[pathWithEl].unselected
-      ) {
-        unselected = true;
-      } else if (
-        this.props.snapshot[pathWithEl] &&
-        this.props.snapshot[pathWithEl].unselected === false
-      ) {
-        unselected = false;
-      } else if (
-        this.props.snapshot[pathWithEl] &&
-        this.props.snapshot[pathWithEl] === "default"
-      ) {
-        unselected = false;
+
+      if (this.props.snapshotChanges[pathWithEl]) {
+        isSelected = this.props.snapshotChanges[pathWithEl].isSelected;
       } else {
-        unselected = true;
+        isSelected = this.props.snapshot[pathWithEl].isSelected;
       }
-
-      console.log("-----");
-
-      console.log("this.props.snapshot ", this.props.snapshot);
-      console.log("pathWithEl ", pathWithEl);
-      console.log("prop ", prop);
-      console.log("unselected ", unselected);
-      console.log("el ", el);
-
-      console.log("-----");
 
       return (
         <div className="obj-container">
           <Radio
-            onChange={() => this.onClickUnionSelection(prop, path)}
-            checked={!unselected}
+            onClick={() =>
+              this.onClickUnionSelection(pathWithEl, this.props.snapshot)
+            }
+            checked={isSelected}
           />
 
           <div>{this.caseRender(el, path)}</div>
@@ -353,7 +310,6 @@ class TypeSelector extends Component {
   };
 
   render() {
-    console.log('this.props.snapshot ', this.props.snapshot)
     return (
       <div>
         <Collapse>
