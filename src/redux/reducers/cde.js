@@ -18,8 +18,8 @@ export const initialState = {
   },
 
   fakeProps: {},
-  customTypes: {},
-  propsAsts: {},
+  snapshot: {},
+  propsAst: {},
 
   // selectedTab only recomputed off of tabs, which are static
   tabs: ["Component", "Custom", "Types", "Code"],
