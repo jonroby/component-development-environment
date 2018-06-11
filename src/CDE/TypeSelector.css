@@ -79,3 +79,12 @@
     margin-right: 5px;
 }
 
+.key .ant-btn.ant-btn-default.ant-btn-sm {
+    font-size: .9em;
+    font-family: 'Menlo';
+    margin-right: 5px;
+    border: 1px solid #1890ff;
+    color: #1890ff;
+}
+
+
