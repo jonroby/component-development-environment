@@ -66,12 +66,13 @@ function createFakeProp(prop, opts, path) {
 // TODO: regex on propKey and use a corresponding faker function if match
 function createNumber(prop, opts, path) {
   if (opts[path] && opts[path] !== "default") {
-    if (opts[path].isNull) return null;
+    if (opts[path].unselected) return FILTER_THIS_ITEM;
 
-    if (opts[path].dontCreate) {
-      return FILTER_THIS_ITEM;
+    if (!opts[path].isPresent) return null;
+
+    if (opts[path].section && opts[path].item) {
+      return faker[opts[path].section][opts[path].item]();
     }
-    return faker[opts[path].section][opts[path].item]();
   }
 
   return faker.random.number();
@@ -79,12 +80,13 @@ function createNumber(prop, opts, path) {
 
 function createString(prop, opts, path) {
   if (opts[path] && opts[path] !== "default") {
-    if (opts[path].isNull) return null;
+    if (opts[path].unselected) return FILTER_THIS_ITEM;
 
-    if (opts[path].dontCreate) {
-      return FILTER_THIS_ITEM;
+    if (!opts[path].isPresent) return null;
+
+    if (opts[path].section && opts[path].item) {
+      return faker[opts[path].section][opts[path].item]();
     }
-    return faker[opts[path].section][opts[path].item]();
   }
 
   return faker.random.word();
@@ -93,7 +95,9 @@ function createString(prop, opts, path) {
 function createBoolean(prop, opts, path) {
   // TODO: Figure out a sensible way to store both true and false
   if (opts[path] && opts[path] !== "default") {
-    if (opts[path].isNull) return null;
+    if (opts[path].unselected) return FILTER_THIS_ITEM;
+
+    if (!opts[path].isPresent) return null;
 
     return opts[path].item;
   }
@@ -112,7 +116,9 @@ function createLiteral(prop, opts, path) {
 
 function createUnion(prop, opts, path) {
   if (opts[path]) {
-    if (!opts[path].dontCreate) return FILTER_THIS_ITEM;
+    if (opts[path].unselected) return FILTER_THIS_ITEM;
+
+    if (!opts[path].isPresent) return FILTER_THIS_ITEM;
   }
 
   // check if previous item is array
@@ -139,9 +145,7 @@ function createUnion(prop, opts, path) {
 
 function createArray(prop, opts, path) {
   if (opts[path]) {
-    if (!opts[path].dontCreate) return FILTER_THIS_ITEM;
-
-    if (opts[path].isNull) return null;
+    if (!opts[path].isPresent) return FILTER_THIS_ITEM;
   }
 
   return prop.elements
@@ -166,19 +170,15 @@ function createArray(prop, opts, path) {
 
 function createObject(prop, opts, path) {
   if (opts[path]) {
-    if (!opts[path].dontCreate) return FILTER_THIS_ITEM;
-
-    if (opts[path].isNull) return FILTER_THIS_ITEM;
+    if (opts[path].isPresent !== undefined && !opts[path].isPresent) return FILTER_THIS_ITEM;
   }
 
   const { properties } = prop.signature;
   return properties.reduce((acc, curr) => {
     const addPath = isObject(curr.key) ? `/object/${curr.key}` : `/${curr.key}`;
 
-    console.log('addPath ', addPath)
-
     if (opts[path + addPath]) {
-      if (opts[path + addPath].isNull) return acc;
+      if (opts[path + addPath].isPresent !== undefined && !opts[path + addPath].isPresent) return acc;
     }
 
     const keyVal = {
@@ -226,10 +226,10 @@ const opts = {
   //   item: "past",
   //   create: false,
   //   isNull: true
-  // }
-  "obj/object/objOptionalVal/string": { isNull: true },
-  "obj/object/objOptionalKey": { isNull: true },
-  optionalKey: { isNull: true }
+  // },
+  "obj/object/objOptionalKey": { isPresent: true },
+  "obj/object/objOptionalKey/string": { isPresent: false },
+  // optionalKey: { isPresent: true }
 };
 
 // const file = fs.readFileSync("./reactComponent.js");
