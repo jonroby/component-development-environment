@@ -66,29 +66,50 @@ class TypeSelector extends Component {
     });
   };
 
-  onClickUnionSelection = (path, snapshot) => {
-    const curr = snapshot[path];
-    let isSelected;
+  onClickUnionSelection = (path, rootPath, elementNames) => {
+    const isUnionInArray = path.split("/")[path.split.length - 1] === "array";
 
-    if (
-      this.props.snapshotChanges[path] &&
-      this.props.snapshotChanges[path].isSelected
-    ) {
-      isSelected = false;
-    } else if (
-      this.props.snapshotChanges[path] &&
-      !this.props.snapshotChanges[path].isSelected
-    ) {
-      isSelected = true;
-    } else if (curr.isSelected) {
-      isSelected = false;
-    } else if (!curr.isSelected) {
-      isSelected = true;
+    const snapshot = Object.keys(this.props.snapshot)
+      .filter(i => elementNames.indexOf(i) !== -1)
+      .reduce((acc, curr) => {
+        const snapshotChange = this.props.snapshotChanges[curr];
+        if (snapshotChange)
+          return {
+            ...acc,
+            [curr]: {
+              ...this.props.snapshot[curr],
+              ...this.props.snapshotChanges[curr]
+            }
+          };
+        return { ...acc, [curr]: this.props.snapshot[curr] };
+      }, {});
+
+    if (isUnionInArray) {
+      const atLeastOneSnapshotSelected =
+        Object.keys(snapshot)
+          .map(item => {
+            if (item === path) return !snapshot[item].isSelected;
+            return snapshot[item].isSelected;
+          })
+          .filter(i => i).length > 0;
+
+      if (atLeastOneSnapshotSelected) {
+        this.props.updateSnapshot({
+          [path]: { isSelected: !snapshot[path].isSelected }
+        });
+      }
+
+      return;
+    } else {
+      const updatedSnapshot = elementNames.reduce((acc, curr) => {
+        return {
+          ...acc,
+          [curr]: { isSelected: curr === path }
+        };
+      }, {});
+
+      this.props.updateSnapshot(updatedSnapshot);
     }
-
-    this.props.updateSnapshot({
-      [path]: { isSelected }
-    });
   };
 
   onClickIsPresent = (path, snapshot) => {
@@ -227,6 +248,7 @@ class TypeSelector extends Component {
   //             checked={!this.props.snapshot[path].unselected}
 
   createUnion = (prop, path) => {
+    const elementNames = prop.elements.map(el => `${path}/${el.name}`);
     const elements = prop.elements.map(el => {
       let isSelected;
       let pathWithEl = path + `/${el.name}`;
@@ -239,12 +261,14 @@ class TypeSelector extends Component {
 
       return (
         <div className="obj-container">
-          <Radio
-            onClick={() =>
-              this.onClickUnionSelection(pathWithEl, this.props.snapshot)
-            }
-            checked={isSelected}
-          />
+          <div>
+            <Radio
+              onClick={() =>
+                this.onClickUnionSelection(pathWithEl, path, elementNames)
+              }
+              checked={isSelected}
+            />
+          </div>
 
           <div>{this.caseRender(el, path)}</div>
         </div>
