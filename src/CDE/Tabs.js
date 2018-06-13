@@ -41,7 +41,7 @@ class TabsView extends Component {
     );
 
     const Code = this.props.propsAst ? (
-      <pre className="code">{this.props.propsAst.filecontents}</pre>
+      <pre className="language-jsx">{this.props.propsAst.filecontents}</pre>
     ) : null;
 
     return (

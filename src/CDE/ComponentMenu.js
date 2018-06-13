@@ -5,9 +5,7 @@ import { connect } from "react-redux";
 import { Menu, Icon } from "antd";
 import { selectComponent, selectSnapshot } from "../redux/actions/cde";
 import { getVisibleComponentNames } from '../redux/reducers/cde';
-
 // import "./ComponentMenu.css";
-
 const SubMenu = Menu.SubMenu;
 const MenuItemGroup = Menu.ItemGroup;
 
@@ -16,6 +14,7 @@ class ComponentMenu extends Component {
     const latestOpenKey = openKeys.find(
       key => this.props.componentNames.indexOf(key) === -1
     );
+
     if (this.props.componentNames.indexOf(latestOpenKey) === -1) {
       this.setState({ openKeys });
     } else {

@@ -1,5 +1,7 @@
 // @flow
 
+// TODO: Major Cleanup
+
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import changeCase from "change-case";

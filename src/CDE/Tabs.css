@@ -1,3 +1,8 @@
+.ant-tabs-bar {
+    margin: 0px;
+    margin-bottom: 40px;
+}
+
 .cde-tab-bar {
     display: flex;
     flex-direction: row;

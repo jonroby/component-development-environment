@@ -2,14 +2,11 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import Tabs from "./Tabs";
 import ComponentView from "./ComponentView";
 import TypesTable from "./TypesTable";
 import SelectFakeProps from "./SelectFakeProps.js";
 import { selectSnapshot } from "../redux/actions/cde";
-
-// import "./CDE.css";
 
 class CDE extends Component {
   renderSelectedTab = () => {
@@ -29,7 +26,9 @@ class CDE extends Component {
     );
 
     const Code = this.props.propsAst ? (
-      <pre className="code">{this.props.propsAst.filecontents}</pre>
+      <pre>
+        <code>hello{this.props.propsAst.filecontents}</code>
+      </pre>
     ) : null;
 
     const opts = { Component, Custom, Types, Code };
@@ -44,7 +43,6 @@ class CDE extends Component {
     );
   }
 }
-// {this.renderSelectedTab()}
 
 const mapStateToProps = state => ({
   selectedComponent: state.cde.selectedComponent,

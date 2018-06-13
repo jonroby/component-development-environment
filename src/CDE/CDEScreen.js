@@ -2,12 +2,11 @@
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
-
 import { Layout } from "antd";
 import { fetchComponentData } from "../redux/actions/cde";
 import CDE from "./CDE";
 import ComponentMenu from "./ComponentMenu";
-
+import ComponentSearch from './ComponentSearch';
 import "./CDEScreen.css";
 
 const { Header, Footer, Sider, Content } = Layout;
@@ -38,14 +37,16 @@ class CDEScreen extends Component {
         <Layout>
           <Sider theme='light' width={256} style={{borderRight: '1px solid #e8e8e8'}}>
             <div className="cde-component-name">
-              <div>Storybook</div>
+              <div>BuildingBlocks</div>
             </div>
+
+            <ComponentSearch />
 
             <ComponentMenu />
           </Sider>
           <Layout>
-            <Header style={{backgroundColor: 'white'}}>{this.props.selectedComponent}</Header>
-            <Content style={{backgroundColor: 'white', paddingLeft: '50px'}}><CDE /></Content>
+            <Header style={{backgroundColor: 'white', fontSize: '16px'}}>{this.props.selectedComponent}</Header>
+            <Content style={{backgroundColor: 'white', paddingLeft: '50px', paddingRight: '50px'}}><CDE /></Content>
             <Footer style={{backgroundColor: 'white'}}>Footer</Footer>
           </Layout>
         </Layout>

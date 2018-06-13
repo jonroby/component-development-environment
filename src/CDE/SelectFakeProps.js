@@ -50,9 +50,6 @@ class SelectFakeProps extends Component<Props> {
       );
     }
 
-    console.log("prevProps ", prevProps);
-    console.log("this.props ", this.props);
-
     if (
       prevProps.selectedComponent !== this.props.selectedComponent ||
       prevProps.selectedSnapshot !== this.props.selectedSnapshot
@@ -68,8 +65,6 @@ class SelectFakeProps extends Component<Props> {
       snapshotChanges,
       snapshot
     } = this.props;
-
-    console.log("value ", this.state.value);
 
     return (
       <div>
@@ -130,20 +125,20 @@ class SelectFakeProps extends Component<Props> {
           )}
         </div>
 
-        {true ? (
-          <Alert
-            message="Warning"
-            description="This snapshot is out of date with current prop types."
-            type="warning"
-            showIcon
-          />
-        ) : null}
-
         <div>{this.renderPropsPaths(snapshot)}</div>
       </div>
     );
   }
 }
+
+// {true ? (
+//   <Alert
+//     message="Warning"
+//     description="This snapshot is out of date with current prop types."
+//     type="warning"
+//     showIcon
+//     />
+// ) : null}
 
 const mapStateToProps = state => ({
   customTypes: state.cde.customTypes,

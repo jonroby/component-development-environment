@@ -6,7 +6,6 @@ import { Menu, Dropdown, Icon } from "antd";
 import options from "./fake_options";
 import { updateSnapshot } from "../redux/actions/cde.js";
 import "./CustomOptions.css";
-
 const SubMenu = Menu.SubMenu;
 
 class CustomOptions extends Component<Props> {
