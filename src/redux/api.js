@@ -1,5 +1,7 @@
+const env = 'http://localhost:3001';
+
 const get = ({ path }) => {
-  return fetch(`http://localhost:3000${path}`)
+  return fetch(`${env}${path}`)
     .then(response => response.json())
     .catch(err => {
       console.log(err);
@@ -7,7 +9,7 @@ const get = ({ path }) => {
 };
 
 const post = ({ path, body }) => {
-  return fetch(`http://localhost:3000${path}`, {
+  return fetch(`${env}${path}`, {
     body: JSON.stringify(body), // must match 'Content-Type' header
     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
     credentials: "same-origin", // include, same-origin, *omit
@@ -26,7 +28,7 @@ const post = ({ path, body }) => {
 };
 
 const put = ({ path, body }) => {
-  return fetch(`http://localhost:3000${path}`, {
+  return fetch(`${env}${path}`, {
     body: JSON.stringify(body), // must match 'Content-Type' header
     cache: "no-cache", // *default, no-cache, reload, force-cache, only-if-cached
     credentials: "same-origin", // include, same-origin, *omit
@@ -45,7 +47,7 @@ const put = ({ path, body }) => {
 };
 
 const del = ({ path }) => {
-  return fetch(`http://localhost:3000${path}`, {
+  return fetch(`${env}${path}`, {
     method: "DELETE"
   })
     .then(response => response.json())

@@ -57,13 +57,18 @@ const cdeReducer = (state = initialState, { type, payload }) => {
       };
 
     case types.UPDATE_SNAPSHOT:
+
       const newSnapshotChanges = Object.keys(payload).reduce((acc, curr) => {
+        console.log('payload ', payload[curr])
         return {
-          [curr]: {
-            ...state.snapshotChanges[curr],
-            ...payload[curr]
+          ...acc,
+          ...{
+            [curr]: {
+              ...state.snapshotChanges[curr],
+              ...payload[curr]
+            }
           }
-        };
+        }
       }, {});
 
       const snapshotChanges = {
