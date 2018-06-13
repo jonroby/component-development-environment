@@ -48,11 +48,7 @@ function updatePropsAsts(jsFileStrings) {
   return returnObj;
 }
 
-function updateCustomTypes(filepath, component) {
-
-}
-
-
+function updateCustomTypes(filepath, component) {}
 
 // Three Jobs
 // 1 Update Indexfile (this action NEEDS to be cached or else an infinite loop)
@@ -93,13 +89,26 @@ CdePlugin.prototype.apply = function(compiler) {
       });
     }, {});
 
+    console.log("defaults ", defaults);
+
     Object.keys(defaults).forEach(d => {
+      console.log("d ", d);
       if (customTypes[d]) {
-        customTypes[d]["default"] = defaults[d];
+        customTypes[d]["default"] = {
+          propsAst: updatedPropsAsts[d],
+          snapshot: defaults[d]
+        };
       } else {
-        customTypes[d] = { default: defaults[d] };
+        customTypes[d] = {
+          default: {
+            propsAst: updatedPropsAsts[d],
+            snapshot: defaults[d]
+          }
+        };
       }
     });
+
+    console.log("customTypes ", customTypes);
 
     let customTypesString = JSON.stringify(customTypes);
     fs.writeFileSync(config.customTypes, customTypesString, "utf8");

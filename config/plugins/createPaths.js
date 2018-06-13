@@ -3,8 +3,8 @@ const faker = require("faker");
 const changeCase = require("change-case");
 const reactDocs = require("react-docgen");
 
-function isObject (value) {
-  return value && typeof value === 'object' && value.constructor === Object;
+function isObject(value) {
+  return value && typeof value === "object" && value.constructor === Object;
 }
 
 function createFakeProps(flowData, opts) {
@@ -14,10 +14,16 @@ function createFakeProps(flowData, opts) {
       const path = propKey;
       const paths = {};
       const fakeProp = createFakeProp(prop.flowType, paths, path);
-      return Object.assign({}, acc, fakeProp);
+      return Object.assign(
+        { [path]: { isPresent: true, isSelected: true } },
+        acc,
+        fakeProp
+      );
     },
     {}
   );
+
+  console.log("fakeComponentProps ", fakeComponentProps);
 
   return fakeComponentProps;
 }
@@ -25,33 +31,33 @@ function createFakeProps(flowData, opts) {
 function createFakeProp(prop, paths, path) {
   switch (changeCase.lowerCase(prop.name)) {
     case "number":
-      return createNumber(prop, paths, path + '/number');
+      return createNumber(prop, paths, path + "/number");
 
     case "string":
-      return createString(prop, paths, path + '/string');
+      return createString(prop, paths, path + "/string");
 
     case "boolean":
-      return createBoolean(prop, paths, path + '/boolean');
+      return createBoolean(prop, paths, path + "/boolean");
 
     case "void":
       return null; // undefined?
 
     case "array":
-      return createArray(prop, paths, path + '/array');
+      return createArray(prop, paths, path + "/array");
 
     case "signature":
       if (prop.type === "object") {
-        return createObject(prop, paths, path + '/object');
+        return createObject(prop, paths, path + "/object");
       } else if (prop.type === "function") {
-        return createFunction(prop, paths, path + '/function');
+        return createFunction(prop, paths, path + "/function");
       }
 
     case "union":
-      return createUnion(prop, paths, path + '/union');
+      return createUnion(prop, paths, path + "/union");
 
     case "literal":
       // TODO: react-docgen changes true to 'true', 1 to '1', 'hello' to '"hello"'
-      return createLiteral(prop, paths, path + '/literal');
+      return createLiteral(prop, paths, path + "/literal");
 
     default:
       console.log("No match.");
@@ -59,15 +65,21 @@ function createFakeProp(prop, paths, path) {
 }
 
 function createNumber(prop, paths, path) {
-  return { [path]: 'default' };
+  return {
+    [path]: { section: "", item: "", isPresent: true, isSelected: true }
+  };
 }
 
 function createString(prop, paths, path) {
-  return { [path]: 'default' };
+  return {
+    [path]: { section: "", item: "", isPresent: true, isSelected: true }
+  };
 }
 
 function createBoolean(prop, paths, path) {
-  return { [path]: 'default' };
+  return {
+    [path]: { section: "", item: "", isPresent: true, isSelected: true }
+  };
 }
 
 function createLiteral(prop, paths, path) {
@@ -77,40 +89,56 @@ function createLiteral(prop, paths, path) {
     });
   }
 
-  return { [path]: 'default' };
+  return {
+    [path]: { section: "", item: "", isPresent: true, isSelected: true }
+  };
 }
 
 function createUnion(prop, paths, path) {
   // return createFakeProp(prop.elements[0], paths, path);
-  const red = prop.elements.reduce((acc, curr) => {
-    let el = createFakeProp(curr, paths, path);
-    return Object.assign({}, acc, el);
-  }, {});
+  const red = prop.elements.reduce(
+    (acc, curr) => {
+      let el = createFakeProp(curr, paths, path);
+      return Object.assign({}, acc, el);
+    },
+    { [path]: { isPresent: true, isSelected: true } }
+  );
 
-  return { [path]: red };
+  return red;
 }
 
 function createArray(prop, paths, path) {
-  const red = prop.elements.reduce((acc, curr) => {
-    let el = createFakeProp(curr, paths, path);
-    return Object.assign({}, acc, el);
-  }, {});
+  const red = prop.elements.reduce(
+    (acc, curr) => {
+      let el = createFakeProp(curr, paths, path);
+      return Object.assign({}, acc, el);
+    },
+    { [path]: { isPresent: true, isSelected: true } }
+  );
 
-  return { [path]: red };
+  return red;
+
+  // return { [path]: red };
 }
 
 function createObject(prop, paths, path) {
   const { properties } = prop.signature;
-  const red = properties.reduce((acc, curr) => {
-    const addPath = isObject(curr.key) ? `/object/${curr.key}` : `/${curr.key}`; 
-    const keyVal = {
-      [curr.key]: createFakeProp(curr.value, paths, path + addPath)
-    };
+  const red = properties.reduce(
+    (acc, curr) => {
+      const addPath = isObject(curr.key)
+        ? `/object/${curr.key}`
+        : `/${curr.key}`;
+      const el = createFakeProp(curr.value, paths, path + addPath);
 
-    return Object.assign({}, acc, keyVal);
-  }, {});
+      return Object.assign({}, acc, {
+        [path + addPath]: { isPresent: true, isSelected: true },
+        ...el
+      });
+    },
+    { [path]: { isPresent: true, isSelected: true } }
+  );
 
-  return { [path]: red };
+  return red;
 }
 
 function createFunction(prop, paths, path) {
@@ -118,5 +146,8 @@ function createFunction(prop, paths, path) {
   const ret = createFakeProp(prop.signature.return);
   return () => ret;
 }
+
+// const component = fs.readFileSync('./testComponent.js');
+// createFakeProps(reactDocs.parse(component));
 
 module.exports = createFakeProps;
