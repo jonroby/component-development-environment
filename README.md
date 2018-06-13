@@ -52,7 +52,7 @@ email -> internet - email
 
 Now click `New`. On the left hand side, a new snapshot has been created with the name `snapshot_1`. Click on it and then select the `Component` tab again. You should see data that more closely matches what you wanted.
 
-![custom type selector](http://recordit.co/DywN4SPtz6)
+![custom type selector](http://recordit.co/DywN4SPtz6.gif)
 
 Let's take a look at how snapshots work and Maybe values at the same time. First, delete snapshot_1 (currently, if you make changes to a type, it's possible that when selecting on an out-of-date snapshot an error may be thrown). Go back to the component's type declarations and edit it:
 
