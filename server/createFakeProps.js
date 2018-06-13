@@ -31,7 +31,7 @@ function createFakeProps(propsAst, opts = {}) {
 function createFakeProp(prop, opts, path) {
   switch (changeCase.lowerCase(prop.name)) {
     case "number":
-      return createNumber(prop, opts, path + "/number");
+      return createNumber(prop, opts, path + "/number"); 
 
     case "string":
       return createString(prop, opts, path + "/string");
@@ -63,10 +63,9 @@ function createFakeProp(prop, opts, path) {
   }
 }
 
-// TODO: regex on propKey and use a corresponding faker function if match
 function createNumber(prop, opts, path) {
-  if (opts[path] && opts[path] !== "default") {
-    if (opts[path].unselected) return FILTER_THIS_ITEM;
+  if (opts[path]) {
+    if (!opts[path].isSelected) return FILTER_THIS_ITEM;
 
     if (!opts[path].isPresent) return null;
 
@@ -79,8 +78,8 @@ function createNumber(prop, opts, path) {
 }
 
 function createString(prop, opts, path) {
-  if (opts[path] && opts[path] !== "default") {
-    if (opts[path].unselected) return FILTER_THIS_ITEM;
+  if (opts[path]) {
+    if (!opts[path].isSelected) return FILTER_THIS_ITEM;
 
     if (!opts[path].isPresent) return null;
 
@@ -94,13 +93,14 @@ function createString(prop, opts, path) {
 
 function createBoolean(prop, opts, path) {
   // TODO: Figure out a sensible way to store both true and false
-  if (opts[path] && opts[path] !== "default") {
-    if (opts[path].unselected) return FILTER_THIS_ITEM;
+  if (opts[path]) {
+    if (!opts[path].isSelected) return FILTER_THIS_ITEM;
 
     if (!opts[path].isPresent) return null;
 
-    return opts[path].item;
+    if (opts[path].value) return opts[path].value;
   }
+
   return faker.random.boolean();
 }
 
@@ -116,26 +116,18 @@ function createLiteral(prop, opts, path) {
 
 function createUnion(prop, opts, path) {
   if (opts[path]) {
-    if (opts[path].unselected) return FILTER_THIS_ITEM;
+    if (!opts[path].isSelected) return FILTER_THIS_ITEM;
 
     if (!opts[path].isPresent) return FILTER_THIS_ITEM;
   }
 
-  // check if previous item is array
-  console.log("prop ", prop);
-  console.log("opts ", opts);
-  console.log("path ", path);
-
-  // check if union is for a prop type or an array
-  // they behave very differently
   const pathArr = path.split("/");
   const itemHoldingUnion = pathArr[pathArr.length - 2];
 
   if (itemHoldingUnion === "array") {
     return prop.elements
       .map(element => {
-        const fakeProp = createFakeProp(element, opts, path);
-        return fakeProp;
+        return createFakeProp(element, opts, path);
       })
       .filter(i => i !== FILTER_THIS_ITEM);
   } else {
@@ -196,45 +188,13 @@ function createFunction(prop, opts, path) {
 }
 
 const opts = {
-  // 'username/string': { section: 'internet' , item: 'userName' },
-  // 'isSubscriber/boolean': { section: 'boolean' , item: 'true' },
-  // 'id/number': { section: 'random' , item: 'uuid' },
-  // 'favoriteWebsites/array/string': { section: 'date', item: 'past' },
-  // 'userData/object/thing1/string': { section: 'finance', item: 'currencyName'},
-  // 'userData/object/thing2/number': { section: 'commerce', item: 'price'},
-  // 'userData/object/thing3/object/nestedStr/string': { section: 'finance', item: 'currencyName'},
-  // 'userData/object/thing3/object/nestedArr/array/string': { section: 'address', item: 'zipCode'},
-  // 'userData/object/thingArr/array/array/number': { section: 'random', item: 'uuid'},
-  // union: { section: "internet", item: "userName" },
-  // "unionArr/array/union/string": {
-  //   section: "random",
-  //   item: "uuid",
-  //   create: false
-  // },
-  // "unionArr/array/union/number": {
-  //   section: "date",
-  //   item: "past",
-  //   create: false
-  // },
-  // "unionArr/array/union/array": {
-  //   section: "date",
-  //   item: "past",
-  //   create: false
-  // }
-  // "unionArr/array": {
-  //   section: "date",
-  //   item: "past",
-  //   create: false,
-  //   isNull: true
-  // },
-  "obj/object/objOptionalKey": { isPresent: true },
-  "obj/object/objOptionalKey/string": { isPresent: false },
-  // optionalKey: { isPresent: true }
+  "uniArray/array/union/string": { isSelected: false, isPresent: true },
+  "uniArray/array/union/number": { isSelected: false, isPresent: true },
+  "uniArray/array/union/boolean": { isSelected: true, isPresent: true },
+  "test": { isSelected: true, isPresent: true }
 };
 
 // const file = fs.readFileSync("./reactComponent.js");
 // const fp = createFakeProps(reactDocs.parse(file), opts);
-// console.log("fp ", fp);
-// console.log("fp.unionTest ", fp.unionTest);
 
 module.exports = createFakeProps;
