@@ -5,20 +5,23 @@ import React, { Component } from "react";
 import "./Post.css";
 
 type Props = {
-  postTitle: number,
-  postId: number,
-  testString: string,
-  testArrStr: Array<string>,
-  testArrNum: Array<number>,
-  testArrOfArrs: Array<Array<number>>,
-  testObj: {
-    objNum: number,
-    objStr: string,
-    nestedObj: {
-      nestedNum: number,
-      nestedStr: string,
-    }
-  }
+  // postTitle: number,
+  // postId: number,
+  // testString: string,
+  // testArrStr: Array<string>,
+  // testArrNum: Array<number>,
+  // testArrOfArrs: Array<Array<number>>,
+  // testObj: {
+  //   objNum: number,
+  //   objStr: string,
+  //   nestedObj: {
+  //     nestedNum: number,
+  //     nestedStr: string,
+  //   }
+  // }
+  union: number | string | boolean,
+  arrayOfUnion: Array<number | string | boolean>
+
 };
 
 class Post extends Component<Props> {

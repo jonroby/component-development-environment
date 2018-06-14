@@ -8,7 +8,7 @@ import { updateSnapshot } from "../redux/actions/cde.js";
 import "./CustomOptions.css";
 const SubMenu = Menu.SubMenu;
 
-class CustomOptions extends Component<Props> {
+class Option extends Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
@@ -82,4 +82,4 @@ class CustomOptions extends Component<Props> {
   }
 }
 
-export default connect(null, { updateSnapshot })(CustomOptions);
+export default connect(null, { updateSnapshot })(Option);

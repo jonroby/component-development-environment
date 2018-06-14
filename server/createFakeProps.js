@@ -16,6 +16,7 @@ function createFakeProps(propsAst, opts = {}) {
       const path = propKey;
 
       if (opts[path] && opts[path].isNull) return acc;
+      if (!opts[path].isPresent) return acc;
 
       const fakeProp = createFakeProp(prop.flowType, opts, path);
 

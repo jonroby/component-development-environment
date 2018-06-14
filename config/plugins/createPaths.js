@@ -23,8 +23,6 @@ function createFakeProps(flowData, opts) {
     {}
   );
 
-  console.log("fakeComponentProps ", fakeComponentProps);
-
   return fakeComponentProps;
 }
 
@@ -95,7 +93,9 @@ function createLiteral(prop, paths, path) {
 }
 
 function createUnion(prop, paths, path) {
-  // return createFakeProp(prop.elements[0], paths, path);
+  const pathArr = path.split("/");
+  const parentIsArray = pathArr[pathArr.length - 2] === "array";
+
   const red = prop.elements.reduce(
     (acc, curr) => {
       let el = createFakeProp(curr, paths, path);
@@ -117,8 +117,6 @@ function createArray(prop, paths, path) {
   );
 
   return red;
-
-  // return { [path]: red };
 }
 
 function createObject(prop, paths, path) {
@@ -147,7 +145,7 @@ function createFunction(prop, paths, path) {
   return () => ret;
 }
 
-// const component = fs.readFileSync('./testComponent.js');
-// createFakeProps(reactDocs.parse(component));
+// const component = fs.readFileSync("./testComponent.js");
+// let t = createFakeProps(reactDocs.parse(component));
 
 module.exports = createFakeProps;

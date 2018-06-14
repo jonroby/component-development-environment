@@ -89,10 +89,7 @@ CdePlugin.prototype.apply = function(compiler) {
       });
     }, {});
 
-    console.log("defaults ", defaults);
-
     Object.keys(defaults).forEach(d => {
-      console.log("d ", d);
       if (customTypes[d]) {
         customTypes[d]["default"] = {
           propsAst: updatedPropsAsts[d],
@@ -107,8 +104,6 @@ CdePlugin.prototype.apply = function(compiler) {
         };
       }
     });
-
-    console.log("customTypes ", customTypes);
 
     let customTypesString = JSON.stringify(customTypes);
     fs.writeFileSync(config.customTypes, customTypesString, "utf8");

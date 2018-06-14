@@ -1,14 +1,15 @@
 // @flow
 
-// TODO: Major Cleanup
+// TODO: Major cleanup required
 
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import changeCase from "change-case";
 import { Collapse, Checkbox, Button, Radio } from "antd";
-import { updateSnapshot } from "../redux/actions/cde.js";
-import CustomOptions from "./CustomOptions";
+import { updateSnapshot } from "../redux/actions/cde";
 import "./TypeSelector.css";
+import CustomOption from "./CustomOption";
+
 const Panel = Collapse.Panel;
 const RadioGroup = Radio.Group;
 
@@ -191,8 +192,6 @@ class TypeSelector extends Component {
       buttonType = "default";
     } else if (this.props.snapshot[path] === undefined) {
       buttonType = "primary";
-    } else if (this.props.snapshot[path].section === "") {
-      buttonType = "primary";
     } else if (this.props.snapshot[path].isPresent) {
       buttonType = "primary";
     } else if (!this.props.snapshot[path].isPresent) {
@@ -221,7 +220,7 @@ class TypeSelector extends Component {
           {this.renderButton(!prop.nullable, path, prop.name)}
         </div>
 
-        <CustomOptions
+        <CustomOption
           snapshot={this.props.snapshot}
           path={path}
           currentOption={this.props.snapshot[path]}
@@ -322,7 +321,7 @@ class TypeSelector extends Component {
     return (
       <div className="arr-container">
         <div className="key">
-          {this.renderButton(prop.required, path, "object")}
+          {this.renderButton(!prop.nullable, path, "object")}
         </div>
         <div className="value">{propertiesList}</div>
       </div>

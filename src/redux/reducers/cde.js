@@ -60,11 +60,12 @@ const cdeReducer = (state = initialState, { type, payload }) => {
 
       const newSnapshotChanges = Object.keys(payload).reduce((acc, curr) => {
         console.log('payload ', payload[curr])
+        const s = state.snapshotChanges[curr] || state.snapshot[curr];
         return {
           ...acc,
           ...{
             [curr]: {
-              ...state.snapshotChanges[curr],
+              ...s,
               ...payload[curr]
             }
           }

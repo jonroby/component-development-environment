@@ -3,7 +3,6 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import { Input, Alert, Button, Divider, message } from "antd";
-import CustomOptions from "./CustomOptions";
 
 import { handleSnapshots } from "../redux/actions/cde.js";
 

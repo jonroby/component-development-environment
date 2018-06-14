@@ -5,7 +5,7 @@ import App from "./App";
 import store from "./redux/store";
 import registerServiceWorker from "./registerServiceWorker";
 
-import "normalize.css";
+/* import "normalize.css"; */
 import "./index.css";
 
 ReactDOM.render(

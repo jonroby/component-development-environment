@@ -1,36 +1,70 @@
-* {
-    box-sizing: border-box;
-}
-
-/* figure out reseting */
-a[href], input[type='submit'], input[type='image'], label[for], select, button, .pointer {
-    cursor: pointer;
-}
-
-input, button, submit { border:none; background-color: transparent;}
-
-ul, li {
-    padding: 0px;
-    text-decoration: none;
-    list-style-type: none;
-}
-/* ------------------- */
-
-button:focus {outline :0;}
+@import '~antd/dist/antd.css';
 
 html {
     height: 100%;
-    color: #222;
 }
 
 body {
-    margin: 0;
-    padding: 0;
     height: 100%;
 
 }
 
 #root {
     height: 100%;
-
 }
+
+#root > div {
+    height: 100%;
+}
+
+.ant-layout.ant-layout-has-sider {
+    height: 100%;
+}
+
+code {
+    margin: 0 1px;
+    background: #f2f4f5;
+    padding: .2em .4em;
+    border-radius: 3px;
+    font-size: .9em;
+    border: 1px solid #eee;
+}
+
+
+/* * { */
+/*     box-sizing: border-box; */
+/* } */
+
+/* /\* figure out reseting *\/ */
+/* a[href], input[type='submit'], input[type='image'], label[for], select, button, .pointer { */
+/*     cursor: pointer; */
+/* } */
+
+/* input, button, submit { border:none; background-color: transparent;} */
+
+/* ul, li { */
+/*     padding: 0px; */
+/*     text-decoration: none; */
+/*     list-style-type: none; */
+/* } */
+/* /\* ------------------- *\/ */
+
+/* button:focus {outline :0;} */
+
+/* html { */
+/*     height: 100%; */
+/*     color: #222; */
+/* } */
+
+/* body { */
+/*     margin: 0; */
+/*     padding: 0; */
+/*     height: 100%; */
+/* } */
+
+/* } */
+
+/* #root { */
+/*     height: 100%; */
+/* } */
+

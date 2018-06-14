@@ -37,7 +37,7 @@ class CDEScreen extends Component {
         <Layout>
           <Sider theme='light' width={256} style={{borderRight: '1px solid #e8e8e8'}}>
             <div className="cde-component-name">
-              <div>BuildingBlocks</div>
+              <div>Component Dev Env</div>
             </div>
 
             <ComponentSearch />
