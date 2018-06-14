@@ -5,6 +5,7 @@ import React, { Component } from "react";
 import "./User.css";
 
 type Props = {
+  name: string
 
 };
 
