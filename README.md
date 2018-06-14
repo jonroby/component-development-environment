@@ -16,10 +16,10 @@ I'm not at all convinced this strategy is better and care more about addressing 
 
 It also provides living documentation.
 
-## Introductory Guide ##
+## Getting Started ##
 Clone the repo and ```nvm use 8 && npm i && npm run cde```.
 
-If you inspect `Post` in `src/components`, modify the type declaration and component as follows:
+If you inspect `User` in `src/components`, modify the type declaration and component as follows:
 
 - First component
 
@@ -52,7 +52,7 @@ Now click `New`. On the left hand side, a new snapshot has been created with the
 
 ![custom type selector](http://recordit.co/DywN4SPtz6.gif)
 
-- Snapshots
+## Snapshots ##
 
 Let's take a look at how snapshots work and Maybe values at the same time. First, delete snapshot_1 (currently, if you make changes to a type, it's possible that when selecting on an out-of-date snapshot an error may be thrown). Go back to the component's type declarations and edit it:
 
@@ -106,24 +106,10 @@ type Props = {
 ...
 ```
 
-![Maybe for object value](http://recordit.co/LkpCnDq0hp)
+![maybe object key values](http://recordit.co/LkpCnDq0hp.git)
 
-Finally, we'll end with unions. Mainly just to emphasize that a Union and Array of Unions behave differently.
-
+As a final note, remember that a Union and Array of Unions behave differently. A union must have one and only one option selected. An array of a union must have at least one option selected.
 ```
-type Props = {
-  ...
-  union: number | string | boolean,
-  arrayOfUnion: Array<number | string | boolean>
-}
-
-...
-
-```
-
-A union must have one and only one option selected. An array of a union must have at least one option selected.
-
-<image here>
 
 ## Supported Types ##
 - [X] Number
