@@ -10,7 +10,7 @@ async function putSnapshot(ctx) {
   const body = ctx.request.body;
 
   const customTypes = JSON.parse(
-    fs.readFileSync(filepaths.customTypes, "utf8")
+    fs.readFileSync(filepaths.customTypes, "utf8"),
   );
 
   const snapshotName = body.name;
@@ -21,14 +21,14 @@ async function putSnapshot(ctx) {
   const newSnapshotWithKey = {
     [snapshotName]: {
       snapshot: newSnapshot,
-      propsAst: base.propsAst
-    }
+      propsAst: base.propsAst,
+    },
   };
 
   let editedCustomType = Object.assign(
     {},
     customTypes[ctx.params.component],
-    newSnapshotWithKey
+    newSnapshotWithKey,
   );
 
   // if the name is being edited, remove the old name (filter it out when creating new object)
@@ -40,7 +40,7 @@ async function putSnapshot(ctx) {
   }
 
   const newComponent = {
-    [ctx.params.component]: editedCustomType
+    [ctx.params.component]: editedCustomType,
   };
 
   const newCustomTypes = Object.assign({}, customTypes, newComponent);
@@ -48,7 +48,7 @@ async function putSnapshot(ctx) {
   fs.writeFileSync(
     filepaths.customTypes,
     JSON.stringify(newCustomTypes),
-    "utf8"
+    "utf8",
   );
 
   // Now repeat steps in getComponentData
@@ -66,7 +66,6 @@ async function putSnapshot(ctx) {
   const snapshotNames = Object.keys(snapshots);
 
   const snapshot = snapshots[snapshotName].snapshot;
-  console.log("snapshot ", snapshots[snapshotName]);
 
   // 3: Generate fake data (fake props)
   const fakeProps = createFakeProps(propsAst, snapshot);
@@ -77,7 +76,7 @@ async function putSnapshot(ctx) {
     snapshot,
     snapshotNames,
     propsAst,
-    selectedSnapshot: snapshotName
+    selectedSnapshot: snapshotName,
   };
 }
 
