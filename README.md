@@ -30,9 +30,8 @@ type Props = {
   email: string
 }
 
-```
+...
 
-```
   <div className="User">
     <div>First name: {this.props.firstName}</div>
     <div>Last name: {this.props.lastName}</div>
@@ -54,7 +53,7 @@ Now click `New`. On the left hand side, a new snapshot has been created with the
 
 ## Snapshots ##
 
-Let's take a look at how snapshots work and Maybe values at the same time. First, delete snapshot_1 (currently, if you make changes to a type, it's possible that when selecting on an out-of-date snapshot an error may be thrown). Go back to the component's type declarations and edit it:
+Let's take a look at how snapshots work, as well as `Maybe` values. First, delete `snapshot_1` (currently, if you make changes to a type, it's possible that when selecting on an out-of-date snapshot an error may be thrown). Go back to the component's type declarations and edit it:
 
 ```
 type Props = {
@@ -88,7 +87,7 @@ class User extends Component<Props> {
 
 ```
 
-When you return to `Custom`, you'll now see the `Maybe` box is now capable of being toggled. Before toggling it, click `New` and select the new `snapshot_1`. In the input box that reads `snapshot_1`, change it to `loaded` and click `Edit`. Then check the `Maybe` box so it is unselected. Change the input box so it reads `loading` and then click `new`. Now when you inspect the components, you can examine both Maybe states.
+When you return to `Custom`, you'll now see the `Maybe` box is selectable. Click `New` and select the new `snapshot_1`. In the input box that reads `snapshot_1`, change it to `loaded` and click `Edit`. Then check the `Maybe` box so it is unselected. Change the input box so it reads `loading` and then click `new`. Now when you inspect the components, you can examine both Maybe states.
 
 ![loading and loaded states](http://recordit.co/vlZgCpUKzD.gif)
 
@@ -106,10 +105,9 @@ type Props = {
 ...
 ```
 
-![maybe object key values](http://recordit.co/LkpCnDq0hp.git)
+![maybe object key values](http://recordit.co/LkpCnDq0hp.gif)
 
 As a final note, remember that a Union and Array of Unions behave differently. A union must have one and only one option selected. An array of a union must have at least one option selected.
-```
 
 ## Supported Types ##
 - [X] Number
